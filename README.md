@@ -46,7 +46,7 @@ Notes:
 - `test_kernel_iter` internally captures `UNROLL_FACTOR` (100) steps per replay; `iters` will be rounded down to a multiple of 100.
 - To include idle-energy accounting in pipeline totals, use pipelines or call `profile_device_idle_power()` before running.
 
-## Custom pipelines
+## Custom Pipelines
 
 Create a pipeline by composing phases and calling `pipeline_benchmark`:
 
