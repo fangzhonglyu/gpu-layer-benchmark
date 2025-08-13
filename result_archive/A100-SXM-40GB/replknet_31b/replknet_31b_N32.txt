@@ -1,0 +1,16 @@
+Results for replknet_31b_N32:
+{'name': 'layer01_stem_0_conv', 'iters': 50000, 'avg_latency_ms': 0.26091841796875, 'avg_energy_J': 0.101881, 'avg_power_W': 390.4679175702958}
+{'name': 'layer02_stem_1_conv', 'iters': 50000, 'avg_latency_ms': 0.238404140625, 'avg_energy_J': 0.09493647999999999, 'avg_power_W': 398.21329577278493}
+{'name': 'layer03_stem_2_conv', 'iters': 50000, 'avg_latency_ms': 0.16755, 'avg_energy_J': 0.06702336, 'avg_power_W': 400.0153605837484}
+{'name': 'layer04_stem_3_conv', 'iters': 50000, 'avg_latency_ms': 0.20386234375, 'avg_energy_J': 0.07566314, 'avg_power_W': 371.14479053246424}
+{'name': 'layer05_s0b0_pw1_conv', 'iters': 50000, 'avg_latency_ms': 0.09080025390625, 'avg_energy_J': 0.03542532, 'avg_power_W': 390.13896277633876}
+{'name': 'layer06_s0b0_lkb_conv', 'iters': 500, 'avg_latency_ms': 7.50470947265625, 'avg_energy_J': 2.651462, 'avg_power_W': 353.29944931052825}
+{'name': 'layer07_s0b0_small_conv', 'iters': 50000, 'avg_latency_ms': 0.131967041015625, 'avg_energy_J': 0.044904099999999995, 'avg_power_W': 340.26302239106946}
+{'name': 'layer08_s0b0_pw2_conv', 'iters': 50000, 'avg_latency_ms': 0.090747314453125, 'avg_energy_J': 0.03555924, 'avg_power_W': 391.84231309462393}
+{'name': 'layer147_s3b3_pw1_conv', 'iters': 50000, 'avg_latency_ms': 0.35805875, 'avg_energy_J': 0.1083428, 'avg_power_W': 302.5818925403449}
+{'name': 'layer148_s3b3_pw2_conv', 'iters': 50000, 'avg_latency_ms': 0.090122666015625, 'avg_energy_J': 0.03552728, 'avg_power_W': 394.2032909852749}
+{'name': 'layer149_head', 'iters': 50000, 'avg_latency_ms': 0.007477985229492188, 'avg_energy_J': 0.00081202, 'avg_power_W': 108.57289213762299}
+Total Pipeline Latency (ms): 9.144618385620117
+Total Pipeline Energy (J): 3.25153674
+Bottleneck Latency (ms): 7.50470947265625
+Total Pipeline Energy with Idle (J): 6.554860101611938

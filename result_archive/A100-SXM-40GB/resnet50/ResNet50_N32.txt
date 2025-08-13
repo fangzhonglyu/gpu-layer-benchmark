@@ -1,0 +1,17 @@
+Results for ResNet50_N32:
+{'name': 'layer1_conv1', 'iters': 50000, 'avg_latency_ms': 0.2974886328125, 'avg_energy_J': 0.09213654, 'avg_power_W': 309.71383376837696}
+{'name': 'layer2_layer1_0_conv1', 'iters': 50000, 'avg_latency_ms': 0.02911375244140625, 'avg_energy_J': 0.011160360000000001, 'avg_power_W': 383.32070415921993}
+{'name': 'layer3_layer1_0_conv2', 'iters': 50000, 'avg_latency_ms': 0.092625712890625, 'avg_energy_J': 0.03642832, 'avg_power_W': 393.27896522727656}
+{'name': 'layer4_layer1_0_conv3', 'iters': 50000, 'avg_latency_ms': 0.0661836376953125, 'avg_energy_J': 0.02428892, 'avg_power_W': 366.98501893687586}
+{'name': 'layer51_layer4_2_conv1', 'iters': 50000, 'avg_latency_ms': 0.03457976318359375, 'avg_energy_J': 0.01370302, 'avg_power_W': 396.2584040015533}
+{'name': 'layer52_layer4_2_conv2', 'iters': 50000, 'avg_latency_ms': 0.0638619873046875, 'avg_energy_J': 0.024246300000000002, 'avg_power_W': 379.65866991495335}
+{'name': 'layer53_layer4_2_conv3', 'iters': 50000, 'avg_latency_ms': 0.03334412353515625, 'avg_energy_J': 0.01299104, 'avg_power_W': 389.58983047321163}
+{'name': 'layer54_fc', 'iters': 50000, 'avg_latency_ms': 0.00826734619140625, 'avg_energy_J': 0.0016288399999999999, 'avg_power_W': 196.99540190311112}
+{'name': 'layer5_layer1_0_dnsample', 'iters': 50000, 'avg_latency_ms': 0.0658427099609375, 'avg_energy_J': 0.02400992, 'avg_power_W': 364.64668432470086}
+{'name': 'layer6_layer1_1_conv1', 'iters': 50000, 'avg_latency_ms': 0.057084208984375, 'avg_energy_J': 0.01913646, 'avg_power_W': 335.22334083802957}
+{'name': 'layer7_layer1_1_conv2', 'iters': 50000, 'avg_latency_ms': 0.093216953125, 'avg_energy_J': 0.03640644, 'avg_power_W': 390.5492440666544}
+{'name': 'layer8_layer1_1_conv3', 'iters': 50000, 'avg_latency_ms': 0.0662127001953125, 'avg_energy_J': 0.024991, 'avg_power_W': 377.4264573794556}
+Total Pipeline Latency (ms): 0.9078215283203125
+Total Pipeline Energy (J): 0.32112716
+Bottleneck Latency (ms): 0.2974886328125
+Total Pipeline Energy with Idle (J): 0.440919052944336

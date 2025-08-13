@@ -1,0 +1,17 @@
+Results for ResNet50_N1:
+{'name': 'layer1_conv1', 'iters': 50000, 'avg_latency_ms': 0.026443203125, 'avg_energy_J': 0.00602162, 'avg_power_W': 227.7066662729988}
+{'name': 'layer2_layer1_0_conv1', 'iters': 50000, 'avg_latency_ms': 0.003924009094238281, 'avg_energy_J': 0.0004635, 'avg_power_W': 118.08844569328802}
+{'name': 'layer3_layer1_0_conv2', 'iters': 50000, 'avg_latency_ms': 0.01361397705078125, 'avg_energy_J': 0.00190792, 'avg_power_W': 140.13022074800324}
+{'name': 'layer4_layer1_0_conv3', 'iters': 50000, 'avg_latency_ms': 0.004558745727539062, 'avg_energy_J': 0.00054374, 'avg_power_W': 119.24697859861494}
+{'name': 'layer51_layer4_2_conv1', 'iters': 50000, 'avg_latency_ms': 0.01144236083984375, 'avg_energy_J': 0.0016096799999999998, 'avg_power_W': 140.66415175927284}
+{'name': 'layer52_layer4_2_conv2', 'iters': 50000, 'avg_latency_ms': 0.043013466796875, 'avg_energy_J': 0.00737568, 'avg_power_W': 171.46986802099184}
+{'name': 'layer53_layer4_2_conv3', 'iters': 50000, 'avg_latency_ms': 0.011460218505859375, 'avg_energy_J': 0.0017925, 'avg_power_W': 156.39677957726917}
+{'name': 'layer54_fc', 'iters': 50000, 'avg_latency_ms': 0.006787870483398437, 'avg_energy_J': 0.0008419, 'avg_power_W': 124.01203110276754}
+{'name': 'layer5_layer1_0_dnsample', 'iters': 50000, 'avg_latency_ms': 0.004561510314941407, 'avg_energy_J': 0.00060904, 'avg_power_W': 133.4858276974182}
+{'name': 'layer6_layer1_1_conv1', 'iters': 50000, 'avg_latency_ms': 0.004873605041503906, 'avg_energy_J': 0.00078234, 'avg_power_W': 160.49132097576103}
+{'name': 'layer7_layer1_1_conv2', 'iters': 50000, 'avg_latency_ms': 0.01380253662109375, 'avg_energy_J': 0.0018944, 'avg_power_W': 137.23789716862538}
+{'name': 'layer8_layer1_1_conv3', 'iters': 50000, 'avg_latency_ms': 0.004563189697265625, 'avg_energy_J': 0.0005922, 'avg_power_W': 129.7444348805786}
+Total Pipeline Latency (ms): 0.14904469329833983
+Total Pipeline Energy (J): 0.02443452
+Bottleneck Latency (ms): 0.043013466796875
+Total Pipeline Energy with Idle (J): 0.04095478087188721
