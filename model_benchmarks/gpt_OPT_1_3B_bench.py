@@ -33,8 +33,8 @@ def decode_pipelines() -> List[Tuple]:
     prod = product(B, P, M, O, D, H, E, F, I)
     return [ gpt_OPT_1_3B_pipeline(b, p, m, o, d, h, e, f, i, DECODE_ITERS) for b, p, m, o, d, h, e, f, i in prod ]
 
-DECODE_ITERS = [3000, 3000, 3000, 50000, 50000, 50000, 1000, 500, 500]
-PREFILL_ITERS = [1000, 1000, 1000, 5000, 5000, 5000, 500, 500, 500]
+DECODE_ITERS = [20000, 20000, 20000, 50000, 50000, 50000, 10000, 8000, 8000]
+PREFILL_ITERS = [20000, 20000, 20000, 50000, 50000, 50000, 10000, 8000, 8000]
 
 def gpt_OPT_1_3B_pipeline(b, p, m, o, d, h, e, f, i, iters) -> List:
     phases = []

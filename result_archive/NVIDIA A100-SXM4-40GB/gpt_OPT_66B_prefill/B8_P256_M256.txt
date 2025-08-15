@@ -1,0 +1,14 @@
+Results for B8_P256_M256:
+{'name': 'Q-proj', 'iters': 10000, 'avg_latency_ms': 1.48803564453125, 'avg_energy_J': 0.5923347, 'avg_power_W': 398.058421515556}
+{'name': 'K-proj', 'iters': 10000, 'avg_latency_ms': 1.4876314453125, 'avg_energy_J': 0.5928832, 'avg_power_W': 398.5352570678169}
+{'name': 'V-proj', 'iters': 10000, 'avg_latency_ms': 1.487483203125, 'avg_energy_J': 0.5921644, 'avg_power_W': 398.09177472906777}
+{'name': 'QKT', 'iters': 10000, 'avg_latency_ms': 0.11604337158203125, 'avg_energy_J': 0.0438996, 'avg_power_W': 378.2795086794833}
+{'name': 'Softmax', 'iters': 10000, 'avg_latency_ms': 0.1362503662109375, 'avg_energy_J': 0.0518063, 'avg_power_W': 380.20769755980723}
+{'name': 'AV', 'iters': 10000, 'avg_latency_ms': 0.09976412353515625, 'avg_energy_J': 0.0392068, 'avg_power_W': 392.96782007226153}
+{'name': 'Output-proj', 'iters': 500, 'avg_latency_ms': 1.469528076171875, 'avg_energy_J': 0.5647300000000001, 'avg_power_W': 384.2534505030809}
+{'name': 'FFN-1', 'iters': 500, 'avg_latency_ms': 5.5746435546875, 'avg_energy_J': 2.2357739999999997, 'avg_power_W': 401.0473420575452}
+{'name': 'Down-proj', 'iters': 500, 'avg_latency_ms': 5.84487109375, 'avg_energy_J': 2.298038, 'avg_power_W': 393.15819614017454}
+Total Pipeline Latency (ms): 17.70425087890625
+Total Pipeline Energy (J): 7.010837
+Bottleneck Latency (ms): 5.84487109375
+Total Pipeline Energy with Idle (J): 8.581318503417968

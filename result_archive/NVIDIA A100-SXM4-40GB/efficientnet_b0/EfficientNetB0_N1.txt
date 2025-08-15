@@ -1,0 +1,14 @@
+Results for EfficientNetB0_N1:
+{'name': 'layer01_features_0_0', 'iters': 50000, 'avg_latency_ms': 0.0076633087158203125, 'avg_energy_J': 0.00130918, 'avg_power_W': 170.80204985937922}
+{'name': 'layer02_features_1_b_0_0', 'iters': 50000, 'avg_latency_ms': 0.004501852111816407, 'avg_energy_J': 0.00068858, 'avg_power_W': 152.91712229096152}
+{'name': 'layer03_feat_1_0_b1_fc1', 'iters': 50000, 'avg_latency_ms': 0.0019931341552734375, 'avg_energy_J': 0.00021234000000000002, 'avg_power_W': 106.47913661842509}
+{'name': 'layer04_feat_1_0_b1_fc2', 'iters': 50000, 'avg_latency_ms': 0.0018312396240234374, 'avg_energy_J': 0.00021219999999999998, 'avg_power_W': 115.79959401341173}
+{'name': 'layer05_features_1_b_2_0', 'iters': 50000, 'avg_latency_ms': 0.0033395303344726564, 'avg_energy_J': 0.00031138, 'avg_power_W': 93.21116765209348}
+{'name': 'layer06_features_2_b_0_0', 'iters': 50000, 'avg_latency_ms': 0.004917739562988281, 'avg_energy_J': 0.00073616, 'avg_power_W': 149.6608769021249}
+{'name': 'layer07_features_2_b_1_0', 'iters': 50000, 'avg_latency_ms': 0.005213552856445313, 'avg_energy_J': 0.00091772, 'avg_power_W': 175.9817137946238}
+{'name': 'layer08_feat_2_0_b2_fc1', 'iters': 50000, 'avg_latency_ms': 0.0024110488891601564, 'avg_energy_J': 0.00022218, 'avg_power_W': 92.10997893345083}
+{'name': 'layer09_feat_2_0_b2_fc2', 'iters': 50000, 'avg_latency_ms': 0.0019282330322265625, 'avg_energy_J': 0.00021434, 'avg_power_W': 111.09307992364529}
+Total Pipeline Latency (ms): 0.03379963928222657
+Total Pipeline Energy (J): 0.0048240800000000006
+Bottleneck Latency (ms): 0.0076633087158203125
+Total Pipeline Energy with Idle (J): 0.006406736262207032

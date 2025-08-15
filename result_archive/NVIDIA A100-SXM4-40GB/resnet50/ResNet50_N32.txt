@@ -1,0 +1,17 @@
+Results for ResNet50_N32:
+{'name': 'layer1_conv1', 'iters': 50000, 'avg_latency_ms': 0.29594814453125, 'avg_energy_J': 0.09789575999999998, 'avg_power_W': 330.7832115072927}
+{'name': 'layer2_layer1_0_conv1', 'iters': 50000, 'avg_latency_ms': 0.02906871826171875, 'avg_energy_J': 0.0109407, 'avg_power_W': 376.35604921472077}
+{'name': 'layer3_layer1_0_conv2', 'iters': 50000, 'avg_latency_ms': 0.09309294921875, 'avg_energy_J': 0.03671018, 'avg_power_W': 394.32890189848655}
+{'name': 'layer4_layer1_0_conv3', 'iters': 50000, 'avg_latency_ms': 0.06609626953125, 'avg_energy_J': 0.02524864, 'avg_power_W': 381.9872823917097}
+{'name': 'layer51_layer4_2_conv1', 'iters': 50000, 'avg_latency_ms': 0.03465861083984375, 'avg_energy_J': 0.013321600000000001, 'avg_power_W': 384.3477078029353}
+{'name': 'layer52_layer4_2_conv2', 'iters': 50000, 'avg_latency_ms': 0.0638571728515625, 'avg_energy_J': 0.02502556, 'avg_power_W': 391.88700586217044}
+{'name': 'layer53_layer4_2_conv3', 'iters': 50000, 'avg_latency_ms': 0.03332087890625, 'avg_energy_J': 0.01266708, 'avg_power_W': 380.1359044827293}
+{'name': 'layer54_fc', 'iters': 50000, 'avg_latency_ms': 0.008250347290039062, 'avg_energy_J': 0.0017847800000000001, 'avg_power_W': 216.2961707333695}
+{'name': 'layer5_layer1_0_dnsample', 'iters': 50000, 'avg_latency_ms': 0.065768388671875, 'avg_energy_J': 0.025349140000000003, 'avg_power_W': 385.4184475389414}
+{'name': 'layer6_layer1_1_conv1', 'iters': 50000, 'avg_latency_ms': 0.0570736865234375, 'avg_energy_J': 0.020647719999999998, 'avg_power_W': 361.7588171774394}
+{'name': 'layer7_layer1_1_conv2', 'iters': 50000, 'avg_latency_ms': 0.09368037109375, 'avg_energy_J': 0.03728614, 'avg_power_W': 398.0046497895571}
+{'name': 'layer8_layer1_1_conv3', 'iters': 50000, 'avg_latency_ms': 0.0661110595703125, 'avg_energy_J': 0.02590004, 'avg_power_W': 391.7535468485028}
+Total Pipeline Latency (ms): 0.9069265972900391
+Total Pipeline Energy (J): 0.33277734
+Bottleneck Latency (ms): 0.29594814453125
+Total Pipeline Energy with Idle (J): 0.45177764116882324

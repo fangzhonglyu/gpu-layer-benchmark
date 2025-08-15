@@ -5,7 +5,7 @@ from torch import float16
 from kernels import test_matmul_iter, test_softmax_iter
 from pipeline_benchmark import pipeline_benchmark
 
-VIT_ITERS = [3000, 3000, 3000, 50000, 50000, 50000, 1000, 500, 500]
+VIT_ITERS = [30000, 30000, 30000, 50000, 50000, 50000, 5000, 20000, 5000]
 
 def vit_pipelines() -> List[Tuple]:
     B = [1, 32]               # Batch Sizes

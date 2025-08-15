@@ -1,0 +1,14 @@
+Results for B32_P197_M197:
+{'name': 'Q-proj', 'iters': 30000, 'avg_latency_ms': 0.039336140950520834, 'avg_energy_J': 0.014546633333333333, 'avg_power_W': 369.78196603768555}
+{'name': 'K-proj', 'iters': 30000, 'avg_latency_ms': 0.0394618896484375, 'avg_energy_J': 0.015727533333333335, 'avg_power_W': 398.5268084958078}
+{'name': 'V-proj', 'iters': 30000, 'avg_latency_ms': 0.039483768717447916, 'avg_energy_J': 0.015742866666666668, 'avg_power_W': 398.6933444963615}
+{'name': 'QKT', 'iters': 50000, 'avg_latency_ms': 0.0688536962890625, 'avg_energy_J': 0.02569284, 'avg_power_W': 373.1407808604457}
+{'name': 'Softmax', 'iters': 50000, 'avg_latency_ms': 0.0558211083984375, 'avg_energy_J': 0.022320219999999998, 'avg_power_W': 399.8406864102607}
+{'name': 'AV', 'iters': 50000, 'avg_latency_ms': 0.06909095703125, 'avg_energy_J': 0.02161344, 'avg_power_W': 312.81771037180977}
+{'name': 'Output-proj', 'iters': 5000, 'avg_latency_ms': 0.03899535217285156, 'avg_energy_J': 0.0143392, 'avg_power_W': 367.6102135648675}
+{'name': 'FFN-1', 'iters': 20000, 'avg_latency_ms': 0.14400634765625, 'avg_energy_J': 0.057958, 'avg_power_W': 402.4552082803574}
+{'name': 'Down-proj', 'iters': 5000, 'avg_latency_ms': 0.1473986572265625, 'avg_energy_J': 0.06287100000000001, 'avg_power_W': 426.49940243498935}
+Total Pipeline Latency (ms): 0.6424479180908204
+Total Pipeline Energy (J): 0.2508117333333334
+Bottleneck Latency (ms): 0.1473986572265625
+Total Pipeline Energy with Idle (J): 0.2815980331960043
