@@ -24,7 +24,7 @@ def resnet50_pipeline(N:int) -> List[Tuple[str, Callable]]:
     phases.append(("layer7_layer1_1_conv2",     lambda: test_conv_iter("layer7_layer1_1_conv2",     C=64,   G=1, M=64,   N=N, P=56,  Q=56,  R=3, S=3, HS=1, WS=1, datatype=float16, iters=RESNET50_ITERS[10])))
     phases.append(("layer8_layer1_1_conv3",     lambda: test_conv_iter("layer8_layer1_1_conv3",     C=64,   G=1, M=256,  N=N, P=56,  Q=56,  R=1, S=1, HS=1, WS=1, datatype=float16, iters=RESNET50_ITERS[11])))
 
-    name = f"ResNet50_N{N}"
+    name = f"resnet50_b{N}_seq1"
     return name, phases
 
 B = [1, 32]  # Batch Sizes

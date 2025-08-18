@@ -1,0 +1,19 @@
+Results for mobilenet_v3_small_b32_seq1:
+{'name': 'layer01_features_0_0', 'iters': 50000, 'avg_latency_ms': 0.0669968994140625, 'avg_energy_J': 0.01804162, 'avg_power_W': 269.2838765727228}
+{'name': 'layer02_features_1_b_0_0', 'iters': 50000, 'avg_latency_ms': 0.02654078857421875, 'avg_energy_J': 0.0069226999999999995, 'avg_power_W': 260.8191564620482}
+{'name': 'layer03_feat_1_b1_fc1', 'iters': 50000, 'avg_latency_ms': 0.0022853836059570313, 'avg_energy_J': 0.00058604, 'avg_power_W': 256.3125359370012}
+{'name': 'layer04_feat_1_b1_fc2', 'iters': 50000, 'avg_latency_ms': 0.002288783416748047, 'avg_energy_J': 0.0001943, 'avg_power_W': 84.8525106153209}
+{'name': 'layer05_features_1_b_2_0', 'iters': 50000, 'avg_latency_ms': 0.00903456787109375, 'avg_energy_J': 0.00198276, 'avg_power_W': 219.435951151804}
+{'name': 'layer052_features_12_0', 'iters': 50000, 'avg_latency_ms': 0.008963522338867188, 'avg_energy_J': 0.0022957, 'avg_power_W': 256.08352248028353}
+{'name': 'layer053_classifier_0', 'iters': 50000, 'avg_latency_ms': 0.0040727960205078125, 'avg_energy_J': 0.00058044, 'avg_power_W': 142.4761950314959}
+{'name': 'layer054_classifier_1', 'iters': 50000, 'avg_latency_ms': 0.007413923950195312, 'avg_energy_J': 0.00069932, 'avg_power_W': 94.31121855750918}
+{'name': 'layer06_features_2_b_0_0', 'iters': 50000, 'avg_latency_ms': 0.0304570361328125, 'avg_energy_J': 0.00902006, 'avg_power_W': 296.1435196506127}
+{'name': 'layer07_features_2_b_1_0', 'iters': 50000, 'avg_latency_ms': 0.02983581787109375, 'avg_energy_J': 0.00813564, 'avg_power_W': 272.66778607098826}
+{'name': 'layer08_features_2_b_2_0', 'iters': 50000, 'avg_latency_ms': 0.00700780517578125, 'avg_energy_J': 0.00135254, 'avg_power_W': 192.97244667511396}
+{'name': 'layer09_features_3_b_0_0', 'iters': 50000, 'avg_latency_ms': 0.009764126586914062, 'avg_energy_J': 0.00308004, 'avg_power_W': 315.40812369797953}
+{'name': 'layer10_features_3_b_1_0', 'iters': 50000, 'avg_latency_ms': 0.01194715087890625, 'avg_energy_J': 0.00360726, 'avg_power_W': 301.905035790411}
+{'name': 'layer11_features_3_b_2_0', 'iters': 50000, 'avg_latency_ms': 0.007051304931640625, 'avg_energy_J': 0.00186304, 'avg_power_W': 264.1711919391496}
+Total Pipeline Latency (ms): 0.22365990676879882
+Total Pipeline Energy (J): 0.058361460000000004
+Bottleneck Latency (ms): 0.0669968994140625
+Total Pipeline Energy with Idle (J): 0.09050481082626344

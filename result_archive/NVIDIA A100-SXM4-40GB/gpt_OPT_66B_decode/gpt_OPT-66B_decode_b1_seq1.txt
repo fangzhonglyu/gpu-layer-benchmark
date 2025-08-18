@@ -1,0 +1,14 @@
+Results for gpt_OPT-66B_decode_b1_seq1:
+{'name': 'Q-proj', 'iters': 10000, 'avg_latency_ms': 0.1293202392578125, 'avg_energy_J': 0.032623599999999996, 'avg_power_W': 252.25488702397027}
+{'name': 'K-proj', 'iters': 10000, 'avg_latency_ms': 0.128989794921875, 'avg_energy_J': 0.0343585, 'avg_power_W': 266.35455392736407}
+{'name': 'V-proj', 'iters': 10000, 'avg_latency_ms': 0.1289892822265625, 'avg_energy_J': 0.0348457, 'avg_power_W': 270.1289088639348}
+{'name': 'QKT', 'iters': 50000, 'avg_latency_ms': 0.004311080932617188, 'avg_energy_J': 0.000555, 'avg_power_W': 128.69966073940475}
+{'name': 'Softmax', 'iters': 50000, 'avg_latency_ms': 0.01045645263671875, 'avg_energy_J': 0.0008933, 'avg_power_W': 85.42169225934839}
+{'name': 'AV', 'iters': 50000, 'avg_latency_ms': 0.006051450805664062, 'avg_energy_J': 0.00066754, 'avg_power_W': 110.28670720824219}
+{'name': 'Output-proj', 'iters': 1000, 'avg_latency_ms': 0.12895948791503906, 'avg_energy_J': 0.036948, 'avg_power_W': 286.39635897970976}
+{'name': 'FFN-1', 'iters': 500, 'avg_latency_ms': 0.4762665100097656, 'avg_energy_J': 0.163184, 'avg_power_W': 342.54437014273395}
+{'name': 'Down-proj', 'iters': 500, 'avg_latency_ms': 0.4739788818359375, 'avg_energy_J': 0.09822, 'avg_power_W': 207.17193901542834}
+Total Pipeline Latency (ms): 1.487323180541992
+Total Pipeline Energy (J): 0.40229563999999995
+Bottleneck Latency (ms): 0.4762665100097656
+Total Pipeline Energy with Idle (J): 0.5282540334295653

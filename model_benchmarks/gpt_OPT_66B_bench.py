@@ -6,8 +6,8 @@ from kernels import test_matmul_iter, test_softmax_iter
 from pipeline_benchmark import pipeline_benchmark
 
 def prefill_pipelines() -> List[Tuple]:
-    B = [1,2,4,8]               # Batch Sizes
-    P = [256, 512, 1024, 2048]  # Lengths
+    B = [1,4]               # Batch Sizes
+    P = [256]  # Lengths
     # M is the same as P
     O = [9216]                  # Original input embedding dimension
     D = [9216]                  # Output embedding dimension after projection
@@ -20,7 +20,7 @@ def prefill_pipelines() -> List[Tuple]:
     return [ gpt_OPT_66B_pipeline(b, p, p, o, d, h, e, f, i, PREFILL_ITERS) for b, p, o, d, h, e, f, i in prod ]
 
 def decode_pipelines() -> List[Tuple]:
-    B = [1,2,4,8]               # Batch Sizes
+    B = [1,4]               # Batch Sizes
     P = [1]                     # Lengths
     M = [2048]                  # M is the output dimension for QKT
     O = [9216]                  # Original input embedding dimension
@@ -47,7 +47,11 @@ def gpt_OPT_66B_pipeline(b, p, m, o, d, h, e, f, i, iters) -> List:
     phases.append(('Output-proj',   lambda: test_matmul_iter("Output-proj", b * p, h * f, o, float16, iters=iters[6])))
     phases.append(('FFN-1',         lambda: test_matmul_iter("FFN-1", b * p, o, i, float16, iters=iters[7])))
     phases.append(('Down-proj',     lambda: test_matmul_iter("Down-proj", b * p, i, o, float16, iters=iters[8])))
-    name = f"B{b}_P{p}_M{m}"
+
+    if m == 2048:
+        name = f"gpt_OPT-66B_decode_b{b}_seq{p}"
+    else:
+        name = f"gpt_OPT-66B_prefill_b{b}_seq{p}"
     return name, phases
 
 pipeline_benchmark(output_dir="benchmarks/gpt_OPT_66B_decode", pipelines=decode_pipelines(), device_index=0)

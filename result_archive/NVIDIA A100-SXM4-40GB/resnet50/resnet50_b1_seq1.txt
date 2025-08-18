@@ -1,0 +1,17 @@
+Results for resnet50_b1_seq1:
+{'name': 'layer1_conv1', 'iters': 50000, 'avg_latency_ms': 0.02591705078125, 'avg_energy_J': 0.0058147, 'avg_power_W': 224.34390373224096}
+{'name': 'layer2_layer1_0_conv1', 'iters': 50000, 'avg_latency_ms': 0.0038958694458007814, 'avg_energy_J': 0.00050338, 'avg_power_W': 129.16859845632172}
+{'name': 'layer3_layer1_0_conv2', 'iters': 50000, 'avg_latency_ms': 0.013396602783203124, 'avg_energy_J': 0.0019228000000000001, 'avg_power_W': 143.51582586206487}
+{'name': 'layer4_layer1_0_conv3', 'iters': 50000, 'avg_latency_ms': 0.0044753921508789065, 'avg_energy_J': 0.00088022, 'avg_power_W': 196.63417567411096}
+{'name': 'layer51_layer4_2_conv1', 'iters': 50000, 'avg_latency_ms': 0.011353865966796875, 'avg_energy_J': 0.00165294, 'avg_power_W': 145.56561966463084}
+{'name': 'layer52_layer4_2_conv2', 'iters': 50000, 'avg_latency_ms': 0.04263083984375, 'avg_energy_J': 0.00729858, 'avg_power_W': 171.1997560957849}
+{'name': 'layer53_layer4_2_conv3', 'iters': 50000, 'avg_latency_ms': 0.01139304443359375, 'avg_energy_J': 0.00183978, 'avg_power_W': 161.46734411297518}
+{'name': 'layer54_fc', 'iters': 50000, 'avg_latency_ms': 0.00657565673828125, 'avg_energy_J': 0.0008893600000000001, 'avg_power_W': 135.2270599575583}
+{'name': 'layer5_layer1_0_dnsample', 'iters': 50000, 'avg_latency_ms': 0.004470824890136719, 'avg_energy_J': 0.0009199599999999999, 'avg_power_W': 205.71809542187916}
+{'name': 'layer6_layer1_1_conv1', 'iters': 50000, 'avg_latency_ms': 0.004860579833984375, 'avg_energy_J': 0.00050892, 'avg_power_W': 104.67937541604816}
+{'name': 'layer7_layer1_1_conv2', 'iters': 50000, 'avg_latency_ms': 0.013566832275390624, 'avg_energy_J': 0.00195106, 'avg_power_W': 143.79827992105743}
+{'name': 'layer8_layer1_1_conv3', 'iters': 50000, 'avg_latency_ms': 0.004476436462402344, 'avg_energy_J': 0.00058478, 'avg_power_W': 130.57123394307234}
+Total Pipeline Latency (ms): 0.14701299560546877
+Total Pipeline Energy (J): 0.02476648
+Bottleneck Latency (ms): 0.04263083984375
+Total Pipeline Energy with Idle (J): 0.04117154871337891

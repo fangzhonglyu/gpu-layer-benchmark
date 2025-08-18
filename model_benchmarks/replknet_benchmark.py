@@ -24,7 +24,7 @@ def replknet_31b_pipeline(N:int) -> List[Tuple[str, Callable]]:
     
     phases.append(("layer149_head",          lambda: test_matmul_iter("layer149_head",          M=1000, K=1024, N=N, datatype=float16, iters=REPL_ITERS[10])))
 
-    name = f"replknet_31b_N{N}"
+    name = f"replknet31b_b{N}_seq1"
     return name, phases
 
 B = [1, 32]  # Batch Sizes

@@ -22,7 +22,7 @@ def efficientnet_b0_pipeline(N:int) -> List[Tuple[str, Callable]]:
     phases.append(("layer08_feat_2_0_b2_fc1", lambda: test_matmul_iter("layer08_feat_2_0_b2_fc1",  M=4,  K=96, N=N, datatype=float16, iters=EFFNETB0_ITERS[7])))
     phases.append(("layer09_feat_2_0_b2_fc2", lambda: test_matmul_iter("layer09_feat_2_0_b2_fc2",  M=96, K=4,  N=N, datatype=float16, iters=EFFNETB0_ITERS[8])))
 
-    name = f"EfficientNetB0_N{N}"
+    name = f"efficientnet_b0_b{N}_seq1"
     return name, phases
 
 B = [1, 32]  # Batch Sizes

@@ -28,7 +28,7 @@ def mobilenet_v3_small_pipeline(N:int) -> List[Tuple[str, Callable]]:
     phases.append(("layer10_features_3_b_1_0",  lambda: test_conv_iter("layer10_features_3_b_1_0", C=1,  G=88, M=1,   N=N, P=28, Q=28, R=3, S=3, HS=1, WS=1, datatype=float16, iters=MBNETV3_ITERS[9])))
     phases.append(("layer11_features_3_b_2_0",  lambda: test_conv_iter("layer11_features_3_b_2_0", C=88, G=1,  M=24,  N=N, P=28, Q=28, R=1, S=1, HS=1, WS=1, datatype=float16, iters=MBNETV3_ITERS[10])))
 
-    name = f"MobileNetV3_N{N}"
+    name = f"mobilenet_v3_small_b{N}_seq1"
     return name, phases
 
 B = [1, 32]  # Batch Sizes

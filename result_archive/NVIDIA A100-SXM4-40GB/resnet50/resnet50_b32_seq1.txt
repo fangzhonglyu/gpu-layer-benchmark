@@ -1,0 +1,17 @@
+Results for resnet50_b32_seq1:
+{'name': 'layer1_conv1', 'iters': 50000, 'avg_latency_ms': 0.2964833984375, 'avg_energy_J': 0.09261602000000001, 'avg_power_W': 312.37964573831283}
+{'name': 'layer2_layer1_0_conv1', 'iters': 50000, 'avg_latency_ms': 0.02896912353515625, 'avg_energy_J': 0.0106398, 'avg_power_W': 367.26482657748124}
+{'name': 'layer3_layer1_0_conv2', 'iters': 50000, 'avg_latency_ms': 0.09241376953125, 'avg_energy_J': 0.03672962, 'avg_power_W': 397.44041637915944}
+{'name': 'layer4_layer1_0_conv3', 'iters': 50000, 'avg_latency_ms': 0.066066904296875, 'avg_energy_J': 0.024149180000000003, 'avg_power_W': 365.51825337238455}
+{'name': 'layer51_layer4_2_conv1', 'iters': 50000, 'avg_latency_ms': 0.03454255126953125, 'avg_energy_J': 0.013511579999999999, 'avg_power_W': 391.1417031564778}
+{'name': 'layer52_layer4_2_conv2', 'iters': 50000, 'avg_latency_ms': 0.063349208984375, 'avg_energy_J': 0.024711039999999997, 'avg_power_W': 390.066486425859}
+{'name': 'layer53_layer4_2_conv3', 'iters': 50000, 'avg_latency_ms': 0.03326320556640625, 'avg_energy_J': 0.012289659999999999, 'avg_power_W': 369.4517918081948}
+{'name': 'layer54_fc', 'iters': 50000, 'avg_latency_ms': 0.008224071655273437, 'avg_energy_J': 0.00162828, 'avg_power_W': 197.96135451240184}
+{'name': 'layer5_layer1_0_dnsample', 'iters': 50000, 'avg_latency_ms': 0.065862041015625, 'avg_energy_J': 0.02435236, 'avg_power_W': 369.7374168511625}
+{'name': 'layer6_layer1_1_conv1', 'iters': 50000, 'avg_latency_ms': 0.057183701171875, 'avg_energy_J': 0.01939652, 'avg_power_W': 339.18762165038936}
+{'name': 'layer7_layer1_1_conv2', 'iters': 50000, 'avg_latency_ms': 0.0925878515625, 'avg_energy_J': 0.03654624, 'avg_power_W': 394.7121478177587}
+{'name': 'layer8_layer1_1_conv3', 'iters': 50000, 'avg_latency_ms': 0.066066552734375, 'avg_energy_J': 0.02466668, 'avg_power_W': 373.35161504030265}
+Total Pipeline Latency (ms): 0.9050123797607421
+Total Pipeline Energy (J): 0.32123698
+Bottleneck Latency (ms): 0.2964833984375
+Total Pipeline Energy with Idle (J): 0.4406124580670166
