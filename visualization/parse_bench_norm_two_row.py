@@ -123,7 +123,7 @@ def plot_all_energy_subplot_broken(
     ax_top.set_yscale('log')  # log scale for top axis
 
     if ymin < 1e-1:
-        ax_bottom.set_ylim(1e-3, low_max)
+        ax_bottom.set_ylim(5e-4, low_max)
         ax_bottom.set_yscale('log')  # log scale for bottom axis
 
     # ---- ticks/labels ----
@@ -272,7 +272,7 @@ def create_combined_plot_direct(savepath: str = "graphs/combined_comparison.png"
         bbox_to_anchor=(0.5, 0.98),
         ncol=5,
         frameon=False,
-        fontsize=10
+        fontsize=12
     )
 
     if savepath:
