@@ -1,13 +1,15 @@
 import seaborn as sns
-palette = sns.color_palette("Set2", 4)
+palette = sns.color_palette("Set2", 5)
 
 from visualization.parse_bench import gpu_energy, gpu_energy_x_cost, gpu_edp, gpu_edp_x_cost
 from visualization.parse_bench import chip_pool_energy, chip_pool_energy_x_cost, chip_pool_edp, chip_pool_edp_x_cost
 from visualization.parse_bench import homo_energy, homo_energy_x_cost, homo_edp, homo_edp_x_cost
 from visualization.parse_bench import homo_per_net_energy, homo_per_net_energy_x_cost, homo_per_net_edp, homo_per_net_edp_x_cost
+from visualization.parse_bench import ideal_energy, ideal_energy_x_cost, ideal_edp, ideal_edp_x_cost
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 
 def make_broken_y_axes_in(ax_parent, height_ratios=(1, 3), hspace=0.05):
     """
@@ -39,6 +41,7 @@ def plot_all_energy_subplot_broken(
     chip_pool_energy: dict,
     homo_per_net_energy: dict,
     homo_energy: dict,
+    ideal_energy: dict,
     metric: str = "min_energy",
     title: str = "Energy Comparison",
     ylabel: str = "Energy (J)",
@@ -53,29 +56,31 @@ def plot_all_energy_subplot_broken(
     Draw bars once on BOTH axes; use y-lims to create a cut-out and slanted marks
     exactly like the Matplotlib example you sent.
     """
-    # ---- collect names ----
+     # ---- collect names ----
     net_names = sorted(set(gpu_energy) | set(chip_pool_energy) |
-                       set(homo_per_net_energy) | set(homo_energy))
+                       set(homo_per_net_energy) | set(homo_energy) | set(ideal_energy))
     if "geometric_mean" in net_names:
         net_names.remove("geometric_mean")
         net_names.append("geometric_mean")
 
-    setups = ["GPU", "Homogeneous All Nets", "Homogeneous Per Net", "Chiplet Pool"]
+    setups = ["GPU", "Homogeneous All Nets", "Homogeneous Per Net", "Chiplet Pool", "Ideal"]
     setup_dicts = {
         "GPU": gpu_energy,
         "Homogeneous All Nets": homo_energy,
         "Homogeneous Per Net": homo_per_net_energy,
         "Chiplet Pool": chip_pool_energy,
+        "Ideal": ideal_energy
     }
     colors = {
         "GPU": palette[0],
         "Homogeneous All Nets": palette[1],
         "Homogeneous Per Net": palette[2],
         "Chiplet Pool": palette[3],
+        "Ideal": palette[4]
     }
 
     x = np.arange(len(net_names))
-    width = 0.2
+    width = 0.15
 
     # ---- normalization ----
     NORM = "Homogeneous All Nets"
@@ -96,6 +101,7 @@ def plot_all_energy_subplot_broken(
         series_vals[setup] = vals
 
     ymax = max(all_vals) if all_vals else break_point
+    ymin = min(all_vals) if all_vals else 0
     any_break = ymax > break_point + 1e-12
 
     top_bar_containers = []
@@ -115,6 +121,10 @@ def plot_all_energy_subplot_broken(
     ax_bottom.set_ylim(0, low_max)           # main detail
 
     ax_top.set_yscale('log')  # log scale for top axis
+
+    if ymin < 1e-1:
+        ax_bottom.set_ylim(1e-3, low_max)
+        ax_bottom.set_yscale('log')  # log scale for bottom axis
 
     # ---- ticks/labels ----
     if hide_x_ticks:
@@ -175,6 +185,10 @@ def plot_all_energy_subplot_broken(
         ax_top.plot([0, 1], [0, 0], transform=ax_top.transAxes, **kwargs)
         ax_bottom.plot([0, 1], [1, 1], transform=ax_bottom.transAxes, **kwargs)
 
+    for label in ax_bottom.get_xticklabels():
+        label.set_transform(label.get_transform() + 
+                        matplotlib.transforms.ScaledTranslation(6/72, 0, ax_bottom.figure.dpi_scale_trans))
+
 def create_combined_plot_direct(savepath: str = "graphs/combined_comparison.png"):
     fig, axes = plt.subplots(2, 2, figsize=(12, 6.5))
 
@@ -186,6 +200,7 @@ def create_combined_plot_direct(savepath: str = "graphs/combined_comparison.png"
         chip_pool_energy=chip_pool_energy,
         homo_per_net_energy=homo_per_net_energy,
         homo_energy=homo_energy,
+        ideal_energy=ideal_energy,
         metric="min_energy",
         title="Energy Comparison",
         ylabel="Normalized Energy",
@@ -202,6 +217,7 @@ def create_combined_plot_direct(savepath: str = "graphs/combined_comparison.png"
         chip_pool_energy=chip_pool_energy_x_cost,
         homo_per_net_energy=homo_per_net_energy_x_cost,
         homo_energy=homo_energy_x_cost,
+        ideal_energy=ideal_energy_x_cost,
         metric="min_energy",
         title="Energy × Cost Comparison",
         ylabel="Normalized Energy × Cost",
@@ -218,6 +234,7 @@ def create_combined_plot_direct(savepath: str = "graphs/combined_comparison.png"
         chip_pool_energy=chip_pool_edp,
         homo_per_net_energy=homo_per_net_edp,
         homo_energy=homo_edp,
+        ideal_energy=ideal_edp,
         metric="min_energy",
         title="EDP Comparison",
         ylabel="Normalized EDP",
@@ -233,6 +250,7 @@ def create_combined_plot_direct(savepath: str = "graphs/combined_comparison.png"
         chip_pool_energy=chip_pool_edp_x_cost,
         homo_per_net_energy=homo_per_net_edp_x_cost,
         homo_energy=homo_edp_x_cost,
+        ideal_energy=ideal_edp_x_cost,
         metric="min_energy",
         title="EDP × Cost Comparison",
         ylabel="Normalized EDP × Cost ",
@@ -246,15 +264,15 @@ def create_combined_plot_direct(savepath: str = "graphs/combined_comparison.png"
     print("labels", labels)
 
          # If you prefer, you can still call tight_layout; subgridspec usually handles it well.
-    plt.tight_layout(rect=[0, 0, 1, 0.95],w_pad=-2, h_pad=0)
+    plt.tight_layout(rect=[0, 0, 1, 0.95],w_pad=-2, h_pad=0.8)
 
     fig.legend(
         handles, labels,
-        loc='upper center',
-        bbox_to_anchor=(0.5, .98),
-        ncol=4,
+        loc='center',
+        bbox_to_anchor=(0.5, 0.98),
+        ncol=5,
         frameon=False,
-        fontsize=8
+        fontsize=10
     )
 
     if savepath:

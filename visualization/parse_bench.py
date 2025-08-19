@@ -56,25 +56,50 @@ def parse_old_bench_to_dict(filename, row_index=0):
                 break  # stop after reaching the desired row
     return add_geometric_mean_to_dict(data)
 
+
 # Example: get data from the 3rd row (index=2)
 homo_energy             = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064606_energy_False.csv", row_index=0)
 homo_energy_x_cost      = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064613_energy_True.csv", row_index=0)
 homo_edp                = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064618_edp_False.csv", row_index=0)
 homo_edp_x_cost         = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064623_edp_True.csv", row_index=0)
 
-print(homo_edp)
-
-homo_per_net_energy         = homo_energy.copy()
-homo_per_net_energy_x_cost  = homo_energy_x_cost.copy()
-homo_per_net_edp            = homo_edp.copy()
-homo_per_net_edp_x_cost     = homo_edp_x_cost.copy()
 
 chip_pool_energy        = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064606_energy_False.csv", row_index=7)
 chip_pool_energy_x_cost = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064613_energy_True.csv", row_index=7)
 chip_pool_edp           = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064618_edp_False.csv", row_index=7)
 chip_pool_edp_x_cost    = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064623_edp_True.csv", row_index=7)
 
-print(chip_pool_edp)
+# ideal_energy            = parse_old_bench_to_dict("result_archive/old_bench/all_chiplets_20250819_065406_energy_False.csv", row_index=0)
+# ideal_energy_x_cost     = parse_old_bench_to_dict("result_archive/old_bench/all_chiplets_20250819_065402_energy_True.csv", row_index=0)
+# ideal_edp               = parse_old_bench_to_dict("result_archive/old_bench/all_chiplets_20250819_065415_edp_False.csv", row_index=0)
+# ideal_edp_x_cost        = parse_old_bench_to_dict("result_archive/old_bench/all_chiplets_20250819_065411_edp_True.csv", row_index=0)
+
+ideal_energy            = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064606_energy_False.csv", row_index=15)
+ideal_energy_x_cost     = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064613_energy_True.csv", row_index=15)
+ideal_edp               = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064618_edp_False.csv", row_index=15)
+ideal_edp_x_cost        = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064623_edp_True.csv", row_index=15)
+
+def parse_per_net_bench_to_dict(filename):
+    data = {}
+    with open(filename, newline="") as f:
+        reader = csv.DictReader(f)
+
+        # grab the n-th row (0-based)
+        for _, row in enumerate(reader):
+            network_name = row["network"]
+            if any(cnn in network_name for cnn in CNNs):
+                network_name = network_name.replace("_seq1", "")
+
+            data[network_name] = {
+                "min_energy": float(row["energy"] if "energy" in row else row["edp"]),
+                "latency": 0
+            }
+    return add_geometric_mean_to_dict(data)
+
+homo_per_net_energy         = parse_per_net_bench_to_dict("result_archive/old_bench/optimal_single_chiplet_energy_False_20250819_065323.csv")
+homo_per_net_energy_x_cost  = parse_per_net_bench_to_dict("result_archive/old_bench/optimal_single_chiplet_energy_True_20250819_065323.csv")
+homo_per_net_edp            = parse_per_net_bench_to_dict("result_archive/old_bench/optimal_single_chiplet_edp_False_20250819_065323.csv")
+homo_per_net_edp_x_cost     = parse_per_net_bench_to_dict("result_archive/old_bench/optimal_single_chiplet_edp_True_20250819_065323.csv")
 
 def parse_gpu_bench_dir_to_dict(root_dir: str):
     # Patterns from the file’s last lines
