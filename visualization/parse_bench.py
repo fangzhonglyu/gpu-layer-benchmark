@@ -63,21 +63,39 @@ homo_energy_x_cost      = parse_old_bench_to_dict("result_archive/old_bench/incr
 homo_edp                = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064618_edp_False.csv", row_index=0)
 homo_edp_x_cost         = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064623_edp_True.csv", row_index=0)
 
-
 chip_pool_energy        = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064606_energy_False.csv", row_index=7)
 chip_pool_energy_x_cost = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064613_energy_True.csv", row_index=7)
 chip_pool_edp           = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064618_edp_False.csv", row_index=7)
 chip_pool_edp_x_cost    = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064623_edp_True.csv", row_index=7)
 
-# ideal_energy            = parse_old_bench_to_dict("result_archive/old_bench/all_chiplets_20250819_065406_energy_False.csv", row_index=0)
-# ideal_energy_x_cost     = parse_old_bench_to_dict("result_archive/old_bench/all_chiplets_20250819_065402_energy_True.csv", row_index=0)
-# ideal_edp               = parse_old_bench_to_dict("result_archive/old_bench/all_chiplets_20250819_065415_edp_False.csv", row_index=0)
-# ideal_edp_x_cost        = parse_old_bench_to_dict("result_archive/old_bench/all_chiplets_20250819_065411_edp_True.csv", row_index=0)
+all_ideal_energy            = parse_old_bench_to_dict("result_archive/old_bench/all_chiplets_20250819_195435_energy_False.csv", row_index=0)
+all_ideal_energy_x_cost     = parse_old_bench_to_dict("result_archive/old_bench/all_chiplets_20250819_195428_energy_True.csv", row_index=0)
+all_ideal_edp               = parse_old_bench_to_dict("result_archive/old_bench/all_chiplets_20250819_195450_edp_False.csv", row_index=0)
+all_ideal_edp_x_cost        = parse_old_bench_to_dict("result_archive/old_bench/all_chiplets_20250819_195442_edp_True.csv", row_index=0)
 
-ideal_energy            = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064606_energy_False.csv", row_index=15)
-ideal_energy_x_cost     = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064613_energy_True.csv", row_index=15)
-ideal_edp               = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064618_edp_False.csv", row_index=15)
-ideal_edp_x_cost        = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064623_edp_True.csv", row_index=15)
+ideal_16_energy            = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064606_energy_False.csv", row_index=15)
+ideal_16_energy_x_cost     = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064613_energy_True.csv", row_index=15)
+ideal_16_edp               = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064618_edp_False.csv", row_index=15)
+ideal_16_edp_x_cost        = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064623_edp_True.csv", row_index=15)
+
+def min_merge_dicts(dict1, dict2):
+    merged = {}
+    for key in set(dict1) | set(dict2):
+        if key in dict1 and key in dict2:
+            merged[key] = {
+                "min_energy": min(dict1[key]["min_energy"], dict2[key]["min_energy"]),
+                "latency": min(dict1[key]["latency"], dict2[key]["latency"])
+            }
+        elif key in dict1:
+            merged[key] = dict1[key]
+        else:
+            merged[key] = dict2[key]
+    return merged
+
+ideal_energy = min_merge_dicts(ideal_16_energy, all_ideal_energy)
+ideal_energy_x_cost = min_merge_dicts(ideal_16_energy_x_cost, all_ideal_energy_x_cost)
+ideal_edp = min_merge_dicts(ideal_16_edp, all_ideal_edp)
+ideal_edp_x_cost = min_merge_dicts(ideal_16_edp_x_cost, all_ideal_edp_x_cost)
 
 def parse_per_net_bench_to_dict(filename):
     data = {}
@@ -172,3 +190,40 @@ gpu_energy = parse_gpu_bench_dir_to_dict("result_archive/NVIDIA A100-SXM4-40GB")
 gpu_energy_x_cost = calculate_gpu_energy_x_cost_dict(gpu_energy, 10000)  # Example cost
 gpu_edp = calculate_gpu_edp_dict(gpu_energy)
 gpu_edp_x_cost = calculate_gpu_edp_x_cost_dict(gpu_energy, 10000)  # Example cost
+
+
+def report_geometric_mean_ratio(gpu_dict, homo_dict, homo_per_net_dict, chippool_dict, ideal_dict):
+    chippool_energy = chippool_dict["geometric_mean"]["min_energy"]
+    chippool_latency = chippool_dict["geometric_mean"]["latency"]
+
+    for name, dict in (
+        ("GPU", gpu_dict),
+        ("Homo", homo_dict),
+        ("Homo per Net", homo_per_net_dict),
+    ):
+        dict_energy = dict["geometric_mean"]["min_energy"]
+        dict_latency = dict["geometric_mean"]["latency"]
+
+        speedup = dict_latency / chippool_latency
+        energy_saving = dict_energy / chippool_energy
+
+        print(f"  Chippool Speedup vs {name} = {speedup},  energy/EDP saving = {energy_saving}")
+
+    ideal_energy = ideal_dict["geometric_mean"]["min_energy"]
+    ideal_latency = ideal_dict["geometric_mean"]["latency"]
+
+    print(f"  Chippool Speedup vs Ideal = {ideal_latency / chippool_latency}")
+    print(f"  Chippool energy/EDP saving = {ideal_energy / chippool_energy}")
+
+
+print("\nENERGY_METRICS:")
+report_geometric_mean_ratio(gpu_energy, homo_energy, homo_per_net_energy, chip_pool_energy, ideal_energy)
+
+print("\nEDP_METRICS:")
+report_geometric_mean_ratio(gpu_edp, homo_edp, homo_per_net_edp, chip_pool_edp, ideal_edp)
+
+print("\nENERGY_x_COST_METRICS:")
+report_geometric_mean_ratio(gpu_energy_x_cost, homo_energy_x_cost, homo_per_net_energy_x_cost, chip_pool_energy_x_cost, ideal_energy_x_cost)
+
+print("\nEDP_x_COST_METRICS:")
+report_geometric_mean_ratio(gpu_edp_x_cost, homo_edp_x_cost, homo_per_net_edp_x_cost, chip_pool_edp_x_cost, ideal_edp_x_cost)
