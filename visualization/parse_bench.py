@@ -78,6 +78,17 @@ ideal_16_energy_x_cost     = parse_old_bench_to_dict("result_archive/old_bench/i
 ideal_16_edp               = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064618_edp_False.csv", row_index=15)
 ideal_16_edp_x_cost        = parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064623_edp_True.csv", row_index=15)
 
+incremental_sweep_energies = []
+incremental_sweep_energies_x_cost = []
+incremental_sweep_edps = []
+incremental_sweep_edps_x_cost = []
+
+for i in range(16):
+    incremental_sweep_energies.append(parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064606_energy_False.csv", row_index=i))
+    incremental_sweep_energies_x_cost.append(parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064613_energy_True.csv", row_index=i))
+    incremental_sweep_edps.append(parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064618_edp_False.csv", row_index=i))
+    incremental_sweep_edps_x_cost.append(parse_old_bench_to_dict("result_archive/old_bench/incremental_chiplet_sweep_20250818_064623_edp_True.csv", row_index=i))
+
 def min_merge_dicts(dict1, dict2):
     merged = {}
     for key in set(dict1) | set(dict2):
@@ -227,3 +238,4 @@ report_geometric_mean_ratio(gpu_energy_x_cost, homo_energy_x_cost, homo_per_net_
 
 print("\nEDP_x_COST_METRICS:")
 report_geometric_mean_ratio(gpu_edp_x_cost, homo_edp_x_cost, homo_per_net_edp_x_cost, chip_pool_edp_x_cost, ideal_edp_x_cost)
+
