@@ -36,6 +36,8 @@ def parse_case_to_dict(filename):
                 "prefill": float(row["best_value_prefill"]),
                 "decode": float(row["best_value_decode"]),
                 "e2e": float(row["e2e_best_value"]),
+                "prefill_config": row["prefill_config"],
+                "decode_config": row["decode_config"],
             }
 
     return cost_unaware, cost_aware
@@ -63,10 +65,18 @@ def plot_case_study():
         # Shorten long names like Chatbot_OPT-66B -> Chatbot
         return re.sub(r"_OPT.*$", "", name)
 
+    def translate_config(cfg: str) -> str:
+        # False_4 -> D4, True_8 -> M8, otherwise unchanged
+        if cfg.startswith("True_"):
+            return "D" + cfg.split("_")[1]
+        if cfg.startswith("False_"):
+            return "M" + cfg.split("_")[1]
+        return cfg
+
     def draw_row(ax, nets, base_dict, our_dict, row_title):
         num_metrics = len(metrics)
         num_nets = len(nets)
-        width = 0.3
+        width = 0.4
         gap = 0.5  # reduced visual gap between metric groups
         group_stride = num_nets + gap
 
@@ -76,6 +86,10 @@ def plot_case_study():
 
         # Horizontal reference at Baseline=1
         ax.axhline(1.0, color="gray", linestyle="--", linewidth=1, alpha=0.5)
+
+        # Transformer for placing labels below the x-axis (y in axes coords)
+        trans = matplotlib.transforms.blended_transform_factory(ax.transData, ax.transAxes)
+        below_axis_y = -0.05  # below x-axis; ensure bottom margin allows visibility
 
         for j, metric in enumerate(metrics):
             start = j * group_stride
@@ -96,7 +110,7 @@ def plot_case_study():
                 edgecolor="black",
                 linewidth=0.3,
                 hatch=hatch,
-                label="Baseline",
+                label="DistServe",
             )
             b2 = ax.bar(
                 xs + width / 2,
@@ -106,26 +120,44 @@ def plot_case_study():
                 edgecolor="black",
                 linewidth=0.3,
                 hatch=hatch,
-                label="Ours",
+                label="DistServe + Mozart",
             )
             baseline_handle, ours_handle = b1[0], b2[0]
+
+            # Add config labels for prefill/decode bars below the x-axis
+            if metric in ("prefill", "decode"):
+                cfg_key = f"{metric}_config"
+                base_cfg = [translate_config(base_dict[n][cfg_key]) for n in nets]
+                our_cfg = [translate_config(our_dict[n][cfg_key]) for n in nets]
+                # Baseline labels
+                for rect, lbl in zip(b1, base_cfg):
+                    x_center = rect.get_x() + rect.get_width() / 2
+                    ax.text(x_center, below_axis_y, lbl,
+                            ha="center", va="top", rotation=0, fontsize=10,
+                            color="black", transform=trans, clip_on=False, fontweight='bold')
+                # Ours labels
+                for rect, lbl in zip(b2, our_cfg):
+                    x_center = rect.get_x() + rect.get_width() / 2
+                    ax.text(x_center, below_axis_y, lbl,
+                            ha="center", va="top", rotation=0, fontsize=10,
+                            color="black", transform=trans, clip_on=False, fontweight='bold')
 
             # Collect ticks and labels (metric on first line, net on second)
             xticks.extend(xs.tolist())
             xticklabels.extend([f"{col_titles[j]}\n{nice_net(n)}" for n in nets])
 
         ax.set_xticks(xticks)
-        ax.set_xticklabels(xticklabels, rotation=35, ha="right", va="top", fontsize=14)
+        ax.set_xticklabels(xticklabels, rotation=35, ha="right", va="top", fontsize=12)
         ax.grid(axis="y", linestyle=":", alpha=0.5)
         for spine in ("top", "right"):
             ax.spines[spine].set_visible(False)
 
         for label in ax.get_xticklabels():
             label.set_transform(label.get_transform() +
-                                matplotlib.transforms.ScaledTranslation(12/72, 0, ax.figure.dpi_scale_trans))
+                                matplotlib.transforms.ScaledTranslation(6/72, -12/72, ax.figure.dpi_scale_trans))
 
         # Labels
-        ax.set_ylabel("Normalized Energy × cost" if row_title == "Cost-unaware" else "Normalized Energy", fontsize=14, fontweight='bold')
+        ax.set_ylabel("Normalized Energy" if row_title == "Cost-unaware" else "Normalized Energy × cost", fontsize=14, fontweight='bold')
 
         # Scale a bit of headroom
         ax.set_ylim(bottom=0)
@@ -142,7 +174,7 @@ def plot_case_study():
     ours_proxy = Patch(facecolor=palette[1], edgecolor="black", label="Ours")
 
     # Single shared legend (Baseline, Ours, and hatch meaning)
-    fig.legend([baseline_proxy, ours_proxy, per_token_proxy, end_to_end_proxy], ["Baseline", "Ours", "Per Token", "End-to-End"], loc="upper center", ncol=4, frameon=False, fontsize=14,
+    fig.legend([baseline_proxy, ours_proxy, per_token_proxy, end_to_end_proxy], ["DistServe", "DistServe + Mozart", "Per Token", "End-to-End"], loc="upper center", ncol=4, frameon=False, fontsize=14,
         bbox_to_anchor=(0.5, 1.03))
 
     # Tighten layout and leave space for legend
