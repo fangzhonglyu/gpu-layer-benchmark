@@ -35,7 +35,7 @@ axes.axvline(x=8, color="gray", linestyle="--", linewidth=0.8)
 
 # add a label slightly above the line
 axes.text(7.8, axes.get_ylim()[1]*0.95, "Our Chiplet\nPool",
-        rotation=0, va="top", ha="right", fontsize=12)
+        rotation=0, va="top", ha="right", fontsize=12, fontweight='bold')
 
 axes.set_xticks(range(1, len(energies) + 1))
 axes.set_xlabel("Number of Chiplets", fontweight='bold', fontsize=12)
@@ -43,6 +43,7 @@ axes.set_ylabel("Normalized Value", fontweight='bold', fontsize=12)
 legend_handles = [Patch(facecolor=color, label=label) 
                   for color, label in zip(palette, labels)]
 axes.legend(handles=legend_handles,fontsize=11)
+axes.grid(True, alpha=0.3, axis='y', which='major')
 plt.tight_layout()
 plt.savefig("graphs/num_chiplet_sweep.pdf", bbox_inches='tight')
 

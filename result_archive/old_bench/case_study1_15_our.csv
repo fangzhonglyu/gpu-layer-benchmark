@@ -1,0 +1,5 @@
+net,objective,cost_aware,approach,prefill_config,decode_config,best_value_prefill,best_value_decode,e2e_best_value
+Chatbot_OPT-66B,energy,False,dist_serve+mozart,False_4,True_8,0.10244928520856217,0.0038730188002789,0.8770530452643421
+Summarization_OPT-66B,energy,False,dist_serve+mozart,True_8,True_8,0.19689122891720112,0.00386643238916079,0.5448701439416722
+Chatbot_OPT-66B,energy,True,dist_serve+mozart,False_1,False_8,62.85074915277407,0.9872956153645718,260.3098722256884
+Summarization_OPT-66B,energy,True,dist_serve+mozart,False_1,True_8,44.19347232011121,0.6995044563254649,114.1439179526577
