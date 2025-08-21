@@ -11,6 +11,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 
+from matplotlib import rcParams
+# # rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+# ## for Palatino and other serif fonts use:
+# rc('font',**{'family':'serif','serif':['Palatino']})
+plt.rcParams['font.family'] = 'serif'
+
+# Optionally, specify a list of preferred serif fonts in order of preference
+# Matplotlib will try to find the first available font from this list
+plt.rcParams['font.serif'] = ['DejaVu Serif', 'Computer Modern Roman']
+
+
 def make_broken_y_axes_in(ax_parent, height_ratios=(1, 3), hspace=0.05):
     """
     Turn a single subplot cell (ax_parent) into (ax_top, ax_bottom) stacked

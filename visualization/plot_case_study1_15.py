@@ -115,7 +115,7 @@ def plot_case_study():
             xticklabels.extend([f"{col_titles[j]}\n{nice_net(n)}" for n in nets])
 
         ax.set_xticks(xticks)
-        ax.set_xticklabels(xticklabels, rotation=35, ha="right", va="top", fontsize=12)
+        ax.set_xticklabels(xticklabels, rotation=35, ha="right", va="top", fontsize=14)
         ax.grid(axis="y", linestyle=":", alpha=0.5)
         for spine in ("top", "right"):
             ax.spines[spine].set_visible(False)
@@ -125,7 +125,7 @@ def plot_case_study():
                                 matplotlib.transforms.ScaledTranslation(12/72, 0, ax.figure.dpi_scale_trans))
 
         # Labels
-        ax.set_ylabel("Normalized Energy × cost" if row_title == "Cost-unaware" else "Normalized Energy", fontsize=12, fontweight='bold')
+        ax.set_ylabel("Normalized Energy × cost" if row_title == "Cost-unaware" else "Normalized Energy", fontsize=14, fontweight='bold')
 
         # Scale a bit of headroom
         ax.set_ylim(bottom=0)
@@ -142,11 +142,11 @@ def plot_case_study():
     ours_proxy = Patch(facecolor=palette[1], edgecolor="black", label="Ours")
 
     # Single shared legend (Baseline, Ours, and hatch meaning)
-    fig.legend([baseline_proxy, ours_proxy, per_token_proxy, end_to_end_proxy], ["Baseline", "Ours", "Per Token", "End-to-End"], loc="upper center", ncol=4, frameon=False, fontsize=12,
-        bbox_to_anchor=(0.5, 1.03),)
+    fig.legend([baseline_proxy, ours_proxy, per_token_proxy, end_to_end_proxy], ["Baseline", "Ours", "Per Token", "End-to-End"], loc="upper center", ncol=4, frameon=False, fontsize=14,
+        bbox_to_anchor=(0.5, 1.03))
 
     # Tighten layout and leave space for legend
-    fig.tight_layout(rect=[0, 0, 1, 0.95], h_pad=0.8)
+    fig.tight_layout(rect=[0, 0, 1, 0.93], h_pad=0.8)
 
     # Save and show
     Path("graphs").mkdir(parents=True, exist_ok=True)

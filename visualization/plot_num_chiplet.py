@@ -7,7 +7,15 @@ from visualization.parse_bench import incremental_sweep_energies, incremental_sw
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
+from matplotlib import rcParams
+# # rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+# ## for Palatino and other serif fonts use:
+# rc('font',**{'family':'serif','serif':['Palatino']})
+plt.rcParams['font.family'] = 'serif'
 
+# Optionally, specify a list of preferred serif fonts in order of preference
+# Matplotlib will try to find the first available font from this list
+plt.rcParams['font.serif'] = ['DejaVu Serif', 'Computer Modern Roman']
 def parse_dict_list(dict_list):
     parsed = []
     first = None
