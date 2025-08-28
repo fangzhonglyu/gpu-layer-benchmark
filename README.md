@@ -2,7 +2,7 @@
 
 Mini GPU benchmarking helper for ML that measures per-layer latency and energy. It uses CUDA Graphs to minimize launch overhead and NVML total energy counters for power/energy.
 
-- Included model pipelines: ResNet18/50, MobileNetV3-Small, EfficientNet-B0, RepLKNet-31B, OPT-66B (prefill & decode)
+- Included model pipelines: ResNet18/50, MobileNetV3-Small, EfficientNet-B0, RepLKNet-31B, OPT-66B (prefill & decode), ViT
 - Profiles small kernels by unrolling and capturing them in CUDA graphs to get amortized energy and latency metrics over many iterations with minimal kernel launch overhead.
 - Measures: average latency in ms, average power in W, per-layer avg energy in J, pipeline latency + energy and pipeline energy assuming full pipeline parallelism.
 
