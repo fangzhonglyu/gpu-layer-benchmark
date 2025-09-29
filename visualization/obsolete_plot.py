@@ -5,11 +5,18 @@ from pathlib import Path
     
 CNNs = ['resnet','mobilenet','efficientnet','replknet']
 
+excluded_geometric = ['replknet32b_b1', 'replknet32b_b32',]
+
 def add_geometric_mean_to_dict(data_dict):
     """
     Adds a geometric mean entry to the dictionary under the specified key.
     If the key already exists, it multiplies the existing value by the new value.
     """
+
+    print(len(data_dict), data_dict.keys())
+    data_dict = {k: v for k, v in data_dict.items() if k not in excluded_geometric}
+    print(len(data_dict), data_dict.keys())
+
     min_energy_product = 1.0
     min_latency_product = 1.0
 
