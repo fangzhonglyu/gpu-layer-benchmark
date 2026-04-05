@@ -1,0 +1,17 @@
+Results for replknet31b_b4:
+{'name': 'layer01_s0b0_pw1', 'iters': 50000, 'avg_latency_ms': 0.006153450317382812, 'avg_energy_J': 0.0027567399999999997, 'avg_power_W': 447.95534449834275}
+{'name': 'layer02_s0b0_lk31', 'iters': 500, 'avg_latency_ms': 0.4851224365234375, 'avg_energy_J': 0.18054800000000001, 'avg_power_W': 372.1171664992193}
+{'name': 'layer03_s0b0_sk5', 'iters': 50000, 'avg_latency_ms': 0.007857276611328125, 'avg_energy_J': 0.0027426799999999995, 'avg_power_W': 349.02554385631845}
+{'name': 'layer04_s0b0_pw2', 'iters': 50000, 'avg_latency_ms': 0.006078177490234375, 'avg_energy_J': 0.0027127999999999996, 'avg_power_W': 446.2850297728944}
+{'name': 'layer05_s0b1_pw1', 'iters': 50000, 'avg_latency_ms': 0.012519029541015626, 'avg_energy_J': 0.00738078, 'avg_power_W': 589.5385543433522}
+{'name': 'layer06_s0b1_pw2', 'iters': 50000, 'avg_latency_ms': 0.017911787109375, 'avg_energy_J': 0.0088251, 'avg_power_W': 492.6716665317989}
+{'name': 'layer13_s1b0_pw1', 'iters': 50000, 'avg_latency_ms': 0.006137203369140625, 'avg_energy_J': 0.00257106, 'avg_power_W': 418.89830434146495}
+{'name': 'layer14_s1b0_lk29', 'iters': 500, 'avg_latency_ms': 0.2552917785644531, 'avg_energy_J': 0.079364, 'avg_power_W': 310.8276383593563}
+{'name': 'layer15_s1b0_sk5', 'iters': 50000, 'avg_latency_ms': 0.005165590209960938, 'avg_energy_J': 0.00165706, 'avg_power_W': 320.73957269211144}
+{'name': 'layer16_s1b0_pw2', 'iters': 50000, 'avg_latency_ms': 0.0061342578125, 'avg_energy_J': 0.00248786, 'avg_power_W': 405.5403473216596}
+{'name': 'layer17_s1b1_pw1', 'iters': 50000, 'avg_latency_ms': 0.017122847900390627, 'avg_energy_J': 0.00912076, 'avg_power_W': 532.634707534263}
+{'name': 'layer18_s1b1_pw2', 'iters': 50000, 'avg_latency_ms': 0.017386512451171874, 'avg_energy_J': 0.0055114, 'avg_power_W': 316.9841135370112}
+Total Pipeline Latency (ms): 0.8428803479003907
+Total Pipeline Energy (J): 0.30567824
+Bottleneck Latency (ms): 0.4851224365234375
+Total Pipeline Energy with Idle (J): 0.5297147400671387

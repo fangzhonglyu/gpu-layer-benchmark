@@ -4,34 +4,35 @@ from torch import float16
 from kernels import test_matmul_iter, test_conv_iter
 from pipeline_benchmark import pipeline_benchmark
 
-MBNETV3_ITERS = [50000] * 12
+ITERS = [50000] * 13
 
 
-def mobilenet_v3_small_pipeline(N:int) -> List[Tuple[str, Callable]]:
+def mobilenet_v3_small_pipeline(N: int) -> Tuple[str, List[Tuple[str, Callable]]]:
     phases = []
-    phases.append(("layer01_features_0_0",      lambda: test_conv_iter("layer01_features_0_0",     C=3,  G=1,  M=16,  N=N, P=112, Q=112, R=3, S=3, HS=2, WS=2, datatype=float16, iters=MBNETV3_ITERS[0])))
-    phases.append(("layer02_features_1_b_0_0",  lambda: test_conv_iter("layer02_features_1_b_0_0", C=1,  G=16, M=1,   N=N, P=56,  Q=56,  R=3, S=3, HS=2, WS=2, datatype=float16, iters=MBNETV3_ITERS[1])))
-    
-    phases.append(("layer03_feat_1_b1_fc1",     lambda: test_matmul_iter("layer03_feat_1_b1_fc1",  M=8,  K=16, N=N, datatype=float16, iters=MBNETV3_ITERS[2])))
-    phases.append(("layer04_feat_1_b1_fc2",     lambda: test_matmul_iter("layer04_feat_1_b1_fc2",  M=16, K=8,  N=N, datatype=float16, iters=MBNETV3_ITERS[3])))
-    
-    phases.append(("layer05_features_1_b_2_0",  lambda: test_conv_iter("layer05_features_1_b_2_0", C=16, G=1,  M=16,  N=N, P=56,  Q=56,  R=1, S=1, HS=1, WS=1, datatype=float16, iters=MBNETV3_ITERS[4])))
-    phases.append(("layer052_features_12_0",    lambda: test_conv_iter("layer052_features_12_0",   C=96, G=1,  M=576, N=N, P=7,   Q=7,   R=1, S=1, HS=1, WS=1, datatype=float16, iters=MBNETV3_ITERS[5])))
-    
-    phases.append(("layer053_classifier_0",     lambda: test_matmul_iter("layer053_classifier_0",  M=1024, K=576,  N=N, datatype=float16, iters=MBNETV3_ITERS[6])))
-    phases.append(("layer054_classifier_1",     lambda: test_matmul_iter("layer054_classifier_1",  M=1000, K=1024, N=N, datatype=float16, iters=MBNETV3_ITERS[7])))
+    # --- Block: features_2 (early, P=56→28) ---
+    phases.append(("layer06_feat2_expand",    lambda: test_conv_iter("layer06_feat2_expand",    C=16, G=1,   M=72,  N=N, P=56, Q=56, R=1, S=1, HS=1, WS=1, datatype=float16, iters=ITERS[0])))
+    phases.append(("layer07_feat2_dw",        lambda: test_conv_iter("layer07_feat2_dw",        C=1,  G=72,  M=1,   N=N, P=28, Q=28, R=3, S=3, HS=2, WS=2, datatype=float16, iters=ITERS[1])))
+    phases.append(("layer08_feat2_project",   lambda: test_conv_iter("layer08_feat2_project",   C=72, G=1,   M=24,  N=N, P=28, Q=28, R=1, S=1, HS=1, WS=1, datatype=float16, iters=ITERS[2])))
 
-    phases.append(("layer06_features_2_b_0_0",  lambda: test_conv_iter("layer06_features_2_b_0_0", C=16, G=1,  M=72,  N=N, P=56, Q=56, R=1, S=1, HS=1, WS=1, datatype=float16, iters=MBNETV3_ITERS[5])))
-    phases.append(("layer07_features_2_b_1_0",  lambda: test_conv_iter("layer07_features_2_b_1_0", C=1,  G=72, M=1,   N=N, P=28, Q=28, R=3, S=3, HS=2, WS=2, datatype=float16, iters=MBNETV3_ITERS[6])))
-    phases.append(("layer08_features_2_b_2_0",  lambda: test_conv_iter("layer08_features_2_b_2_0", C=72, G=1,  M=24,  N=N, P=28, Q=28, R=1, S=1, HS=1, WS=1, datatype=float16, iters=MBNETV3_ITERS[7])))
-    phases.append(("layer09_features_3_b_0_0",  lambda: test_conv_iter("layer09_features_3_b_0_0", C=24, G=1,  M=88,  N=N, P=28, Q=28, R=1, S=1, HS=1, WS=1, datatype=float16, iters=MBNETV3_ITERS[8])))
-    phases.append(("layer10_features_3_b_1_0",  lambda: test_conv_iter("layer10_features_3_b_1_0", C=1,  G=88, M=1,   N=N, P=28, Q=28, R=3, S=3, HS=1, WS=1, datatype=float16, iters=MBNETV3_ITERS[9])))
-    phases.append(("layer11_features_3_b_2_0",  lambda: test_conv_iter("layer11_features_3_b_2_0", C=88, G=1,  M=24,  N=N, P=28, Q=28, R=1, S=1, HS=1, WS=1, datatype=float16, iters=MBNETV3_ITERS[10])))
+    # --- Block: features_5 (middle, P=14, with SE) ---
+    phases.append(("layer17_feat5_expand",    lambda: test_conv_iter("layer17_feat5_expand",    C=40,  G=1,   M=240, N=N, P=14, Q=14, R=1, S=1, HS=1, WS=1, datatype=float16, iters=ITERS[3])))
+    phases.append(("layer18_feat5_dw",        lambda: test_conv_iter("layer18_feat5_dw",        C=1,   G=240, M=1,   N=N, P=14, Q=14, R=5, S=5, HS=1, WS=1, datatype=float16, iters=ITERS[4])))
+    phases.append(("layer19_feat5_se_fc1",    lambda: test_matmul_iter("layer19_feat5_se_fc1",  M=64,  K=240, N=N, datatype=float16, iters=ITERS[5])))
+    phases.append(("layer20_feat5_se_fc2",    lambda: test_matmul_iter("layer20_feat5_se_fc2",  M=240, K=64,  N=N, datatype=float16, iters=ITERS[6])))
+    phases.append(("layer21_feat5_project",   lambda: test_conv_iter("layer21_feat5_project",   C=240, G=1,   M=40,  N=N, P=14, Q=14, R=1, S=1, HS=1, WS=1, datatype=float16, iters=ITERS[7])))
 
-    name = f"mobilenet_v3_small_b{N}_seq1"
+    # --- Block: features_10 (late, P=7, with SE) ---
+    phases.append(("layer42_feat10_expand",   lambda: test_conv_iter("layer42_feat10_expand",   C=96,  G=1,   M=576, N=N, P=7, Q=7, R=1, S=1, HS=1, WS=1, datatype=float16, iters=ITERS[8])))
+    phases.append(("layer43_feat10_dw",       lambda: test_conv_iter("layer43_feat10_dw",       C=1,   G=576, M=1,   N=N, P=7, Q=7, R=5, S=5, HS=1, WS=1, datatype=float16, iters=ITERS[9])))
+    phases.append(("layer44_feat10_se_fc1",   lambda: test_matmul_iter("layer44_feat10_se_fc1", M=144, K=576, N=N, datatype=float16, iters=ITERS[10])))
+    phases.append(("layer45_feat10_se_fc2",   lambda: test_matmul_iter("layer45_feat10_se_fc2", M=576, K=144, N=N, datatype=float16, iters=ITERS[11])))
+    phases.append(("layer46_feat10_project",  lambda: test_conv_iter("layer46_feat10_project",  C=576, G=1,   M=96,  N=N, P=7, Q=7, R=1, S=1, HS=1, WS=1, datatype=float16, iters=ITERS[12])))
+
+    name = f"mobilenet_v3_small_b{N}"
     return name, phases
 
-B = [1, 32]  # Batch Sizes
-mobilenet_v3_pipelines = [mobilenet_v3_small_pipeline(n) for n in B]
 
-pipeline_benchmark(output_dir="benchmarks/mobilenet_v3_small", pipelines=mobilenet_v3_pipelines, device_index=0)
+B = [1, 4, 8, 16]
+pipelines = [mobilenet_v3_small_pipeline(n) for n in B]
+
+pipeline_benchmark(output_dir="benchmarks/mobilenet_v3_small", pipelines=pipelines, device_index=0)

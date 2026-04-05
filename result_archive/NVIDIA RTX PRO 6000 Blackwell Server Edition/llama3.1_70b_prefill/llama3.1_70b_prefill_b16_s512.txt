@@ -1,0 +1,15 @@
+Results for llama3.1_70b_prefill_b16_s512:
+{'name': 'Q-proj', 'iters': 10000, 'avg_latency_ms': 3.732428515625, 'avg_energy_J': 2.2379632000000003, 'avg_power_W': 599.5938064644641}
+{'name': 'K-proj', 'iters': 10000, 'avg_latency_ms': 0.430488720703125, 'avg_energy_J': 0.2639338, 'avg_power_W': 613.0937806654923}
+{'name': 'V-proj', 'iters': 10000, 'avg_latency_ms': 0.430388720703125, 'avg_energy_J': 0.25811219999999996, 'avg_power_W': 599.7066916191105}
+{'name': 'QKT', 'iters': 50000, 'avg_latency_ms': 0.4643619140625, 'avg_energy_J': 0.2575113, 'avg_power_W': 554.5432159323847}
+{'name': 'Softmax', 'iters': 50000, 'avg_latency_ms': 0.734260625, 'avg_energy_J': 0.32416626, 'avg_power_W': 441.48217891455465}
+{'name': 'AV', 'iters': 50000, 'avg_latency_ms': 0.4501791015625, 'avg_energy_J': 0.26998494, 'avg_power_W': 599.721752849242}
+{'name': 'O-proj', 'iters': 10000, 'avg_latency_ms': 3.7446984375, 'avg_energy_J': 2.243921, 'avg_power_W': 599.2199480193877}
+{'name': 'Gate-proj', 'iters': 500, 'avg_latency_ms': 13.1096845703125, 'avg_energy_J': 7.865565999999999, 'avg_power_W': 599.9737151520293}
+{'name': 'Up-proj', 'iters': 500, 'avg_latency_ms': 13.1317626953125, 'avg_energy_J': 7.9212039999999995, 'avg_power_W': 603.2006581515489}
+{'name': 'Down-proj', 'iters': 500, 'avg_latency_ms': 12.9934921875, 'avg_energy_J': 7.800514, 'avg_power_W': 600.3325620970197}
+Total Pipeline Latency (ms): 49.22174548828124
+Total Pipeline Energy (J): 29.4428767
+Bottleneck Latency (ms): 13.1317626953125
+Total Pipeline Energy with Idle (J): 33.13719136591797

@@ -1,0 +1,17 @@
+Results for replknet31b_b16:
+{'name': 'layer01_s0b0_pw1', 'iters': 50000, 'avg_latency_ms': 0.01273215087890625, 'avg_energy_J': 0.007296380000000001, 'avg_power_W': 573.0471182290904}
+{'name': 'layer02_s0b0_lk31', 'iters': 500, 'avg_latency_ms': 1.823859619140625, 'avg_energy_J': 0.8917619999999999, 'avg_power_W': 488.9253620008784}
+{'name': 'layer03_s0b0_sk5', 'iters': 50000, 'avg_latency_ms': 0.02415083984375, 'avg_energy_J': 0.01140098, 'avg_power_W': 472.0542588677441}
+{'name': 'layer04_s0b0_pw2', 'iters': 50000, 'avg_latency_ms': 0.012728341064453126, 'avg_energy_J': 0.00749958, 'avg_power_W': 589.1804165458525}
+{'name': 'layer05_s0b1_pw1', 'iters': 50000, 'avg_latency_ms': 0.043110419921875, 'avg_energy_J': 0.02543072, 'avg_power_W': 589.8862742505473}
+{'name': 'layer06_s0b1_pw2', 'iters': 50000, 'avg_latency_ms': 0.03536427490234375, 'avg_energy_J': 0.02092612, 'avg_power_W': 591.7204427251467}
+{'name': 'layer13_s1b0_pw1', 'iters': 50000, 'avg_latency_ms': 0.01654776123046875, 'avg_energy_J': 0.009816799999999999, 'avg_power_W': 593.2179400847625}
+{'name': 'layer14_s1b0_lk29', 'iters': 500, 'avg_latency_ms': 0.857184814453125, 'avg_energy_J': 0.499808, 'avg_power_W': 583.0531280318365}
+{'name': 'layer15_s1b0_sk5', 'iters': 50000, 'avg_latency_ms': 0.0132112451171875, 'avg_energy_J': 0.00539232, 'avg_power_W': 408.1430822977941}
+{'name': 'layer16_s1b0_pw2', 'iters': 50000, 'avg_latency_ms': 0.016555960693359375, 'avg_energy_J': 0.010810460000000001, 'avg_power_W': 652.9283193537407}
+{'name': 'layer17_s1b1_pw1', 'iters': 50000, 'avg_latency_ms': 0.037646572265625, 'avg_energy_J': 0.02281996, 'avg_power_W': 606.1492511658015}
+{'name': 'layer18_s1b1_pw2', 'iters': 50000, 'avg_latency_ms': 0.03551108642578125, 'avg_energy_J': 0.01519914, 'avg_power_W': 428.00339740258636}
+Total Pipeline Latency (ms): 2.9286030859375005
+Total Pipeline Energy (J): 1.52816246
+Bottleneck Latency (ms): 1.823859619140625
+Total Pipeline Energy with Idle (J): 2.38125951546875

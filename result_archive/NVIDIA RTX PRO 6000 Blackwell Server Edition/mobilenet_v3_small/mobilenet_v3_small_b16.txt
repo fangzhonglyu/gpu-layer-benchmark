@@ -1,0 +1,18 @@
+Results for mobilenet_v3_small_b16:
+{'name': 'layer06_feat2_expand', 'iters': 50000, 'avg_latency_ms': 0.005841435546875, 'avg_energy_J': 0.0028301600000000004, 'avg_power_W': 484.45762557277203}
+{'name': 'layer07_feat2_dw', 'iters': 50000, 'avg_latency_ms': 0.007894381713867188, 'avg_energy_J': 0.0029775799999999996, 'avg_power_W': 377.15935946727143}
+{'name': 'layer08_feat2_project', 'iters': 50000, 'avg_latency_ms': 0.0031052972412109374, 'avg_energy_J': 0.00114112, 'avg_power_W': 367.42870049012157}
+{'name': 'layer17_feat5_expand', 'iters': 50000, 'avg_latency_ms': 0.003759920654296875, 'avg_energy_J': 0.0007287999999999999, 'avg_power_W': 193.8130657067329}
+{'name': 'layer18_feat5_dw', 'iters': 50000, 'avg_latency_ms': 0.005111930847167968, 'avg_energy_J': 0.00160476, 'avg_power_W': 313.88426926849877}
+{'name': 'layer19_feat5_se_fc1', 'iters': 50000, 'avg_latency_ms': 0.0025939678955078124, 'avg_energy_J': 0.0008227, 'avg_power_W': 317.101601415474}
+{'name': 'layer20_feat5_se_fc2', 'iters': 50000, 'avg_latency_ms': 0.0016538648986816407, 'avg_energy_J': 0.0, 'avg_power_W': 0.0}
+{'name': 'layer21_feat5_project', 'iters': 50000, 'avg_latency_ms': 0.004148837890625, 'avg_energy_J': 0.00132332, 'avg_power_W': 318.9303267748928}
+{'name': 'layer42_feat10_expand', 'iters': 50000, 'avg_latency_ms': 0.0073254296875, 'avg_energy_J': 0.0012237399999999999, 'avg_power_W': 167.03279508457308}
+{'name': 'layer43_feat10_dw', 'iters': 50000, 'avg_latency_ms': 0.005444976196289062, 'avg_energy_J': 0.00205618, 'avg_power_W': 377.589815820609}
+{'name': 'layer44_feat10_se_fc1', 'iters': 50000, 'avg_latency_ms': 0.0036156222534179687, 'avg_energy_J': 0.00060156, 'avg_power_W': 166.35870017679446}
+{'name': 'layer45_feat10_se_fc2', 'iters': 50000, 'avg_latency_ms': 0.002249782409667969, 'avg_energy_J': 0.00023478000000000003, 'avg_power_W': 104.33677459597672}
+{'name': 'layer46_feat10_project', 'iters': 50000, 'avg_latency_ms': 0.010721016845703125, 'avg_energy_J': 0.00161318, 'avg_power_W': 150.46281761868417}
+Total Pipeline Latency (ms): 0.06346646408081055
+Total Pipeline Energy (J): 0.017157879999999997
+Bottleneck Latency (ms): 0.010721016845703125
+Total Pipeline Energy with Idle (J): 0.020573683971099852
