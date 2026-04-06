@@ -9,7 +9,7 @@ def save_csv_wide(all_results, filename="summary.csv"):
     df_layers = pd.json_normalize(
         all_results,
         record_path="results",
-        meta=["name", "total_pipeline_latency", "total_pipeline_energy"],
+        meta=["name", "total_pipeline_latency", "total_pipeline_energy", "total_pipeline_energy_with_idle"],
         record_prefix="layer_",
         meta_prefix="pipeline_",
     )
@@ -27,18 +27,21 @@ def save_csv_wide(all_results, filename="summary.csv"):
     wide = wide.reset_index().rename(columns={"pipeline_name": "pipeline"})
 
     # Add pipeline totals
-    totals = (df_layers[["pipeline_name", "pipeline_total_pipeline_latency", "pipeline_total_pipeline_energy"]]
+    totals = (df_layers[["pipeline_name", "pipeline_total_pipeline_latency",
+                         "pipeline_total_pipeline_energy",
+                         "pipeline_total_pipeline_energy_with_idle"]]
               .drop_duplicates()
               .rename(columns={
                   "pipeline_total_pipeline_latency": "pipeline_latency_ms",
                   "pipeline_total_pipeline_energy": "pipeline_energy_J",
+                  "pipeline_total_pipeline_energy_with_idle": "pipeline_energy_with_idle_J",
               }))
     wide = wide.merge(totals, left_on="pipeline", right_on="pipeline_name", how="left") \
                .drop(columns=["pipeline_name"])
 
     num_cols = [c for c in wide.columns
             if c.startswith(("layer_avg_latency_ms__", "layer_avg_energy_J__", "layer_avg_power_W__"))
-            or c in ("pipeline_latency_ms", "pipeline_energy_J")]
+            or c in ("pipeline_latency_ms", "pipeline_energy_J", "pipeline_energy_with_idle_J")]
 
     wide[num_cols] = wide[num_cols].apply(pd.to_numeric, errors="coerce")
     wide[num_cols] = wide[num_cols].fillna(0.0)

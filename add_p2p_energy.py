@@ -226,8 +226,22 @@ def process_txt(filepath, pj_per_bit):
     return True
 
 
+def _read_idle_energy_from_txt(csv_dir, pipeline_name):
+    """Read 'Total Pipeline Energy with Idle' from the corresponding .txt file."""
+    txt_path = os.path.join(csv_dir, f"{pipeline_name}.txt")
+    if not os.path.exists(txt_path):
+        return None
+    with open(txt_path, 'r') as f:
+        for line in f:
+            if 'Total Pipeline Energy with Idle' in line and P2P_TAG not in line:
+                val = re.search(r':\s*([\d.eE+-]+)', line)
+                if val:
+                    return float(val.group(1))
+    return None
+
+
 def process_csv(filepath, pj_per_bit):
-    """Add p2p_transfer_energy_J and pipeline_energy_with_p2p_J columns to summary.csv."""
+    """Add P2P energy columns and backfill pipeline_energy_with_idle_J to summary.csv."""
     with open(filepath, 'r') as f:
         reader = csv.DictReader(f)
         rows = list(reader)
@@ -236,29 +250,46 @@ def process_csv(filepath, pj_per_bit):
     if not rows or not fieldnames:
         return False
 
-    # Ensure columns exist
-    new_cols = ['p2p_transfer_energy_J', 'pipeline_energy_with_p2p_J']
+    csv_dir = os.path.dirname(filepath)
+
+    # Ensure columns exist (in order)
+    new_cols = ['pipeline_energy_with_idle_J',
+                'p2p_transfer_energy_J',
+                'pipeline_energy_with_idle_and_p2p_J']
     for col in new_cols:
         if col not in fieldnames:
             fieldnames.append(col)
 
+    # Remove old column if present
+    if 'pipeline_energy_with_p2p_J' in fieldnames:
+        fieldnames.remove('pipeline_energy_with_p2p_J')
+
     any_updated = False
     for row in rows:
         pipeline_name = row.get('pipeline', '')
+        row.pop('pipeline_energy_with_p2p_J', None)
+
+        # Backfill pipeline_energy_with_idle_J from TXT if missing
+        idle_e = row.get('pipeline_energy_with_idle_J', '')
+        if not idle_e:
+            val = _read_idle_energy_from_txt(csv_dir, pipeline_name)
+            if val is not None:
+                idle_e = f'{val:.6f}'
+                row['pipeline_energy_with_idle_J'] = idle_e
+
         tbytes = get_transfer_bytes(pipeline_name)
         if tbytes is None:
             row['p2p_transfer_energy_J'] = ''
-            row['pipeline_energy_with_p2p_J'] = ''
+            row['pipeline_energy_with_idle_and_p2p_J'] = ''
             continue
 
         energy = p2p_energy_J(tbytes, pj_per_bit)
         row['p2p_transfer_energy_J'] = f'{energy:.6f}'
 
-        pe = row.get('pipeline_energy_J', '')
-        if pe:
-            row['pipeline_energy_with_p2p_J'] = f'{float(pe) + energy:.6f}'
+        if idle_e:
+            row['pipeline_energy_with_idle_and_p2p_J'] = f'{float(idle_e) + energy:.6f}'
         else:
-            row['pipeline_energy_with_p2p_J'] = ''
+            row['pipeline_energy_with_idle_and_p2p_J'] = ''
         any_updated = True
 
     if not any_updated:
