@@ -13,3 +13,5 @@ Total Pipeline Latency (ms): 0.3146696026611328
 Total Pipeline Energy (J): 0.111777125
 Bottleneck Latency (ms): 0.06511793518066407
 Total Pipeline Energy with Idle (J): 0.12692006371154785
+P2P Transfer Energy (J): 0.000242  [@ 200 pJ/bit]
+Total Pipeline Energy with Idle + P2P (J): 0.127163
