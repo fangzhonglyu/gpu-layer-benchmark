@@ -56,5 +56,5 @@ def decode_pipelines() -> List[Tuple]:
     return [llama3_1_8b_pipeline(b, 1, kv, DECODE_ITERS) for b, kv in product(B, KV)]
 
 
-pipeline_benchmark(output_dir="benchmarks/llama3.1_8b_prefill", pipelines=prefill_pipelines(), device_index=0)
+#pipeline_benchmark(output_dir="benchmarks/llama3.1_8b_prefill", pipelines=prefill_pipelines(), device_index=0)
 pipeline_benchmark(output_dir="benchmarks/llama3.1_8b_decode",  pipelines=decode_pipelines(),  device_index=0)

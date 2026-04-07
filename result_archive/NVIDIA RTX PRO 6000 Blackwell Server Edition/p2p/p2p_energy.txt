@@ -1,0 +1,48 @@
+GPU: NVIDIA RTX PRO 6000 Blackwell Server Edition
+Iters: 100
+
+Size: 256 MB
+  Avg Latency:          5.589 ms
+  Bandwidth:            48.03 GB/s
+  Sender Transfer E:    21.201726 J
+  Both-side Transfer E: 37.148928 J
+  Energy/bit (sender):  98.73 pJ
+  Energy/bit (both):    172.99 pJ
+  Idle Power:           79.1 W
+
+Size: 512 MB
+  Avg Latency:          11.157 ms
+  Bandwidth:            48.12 GB/s
+  Sender Transfer E:    34.018486 J
+  Both-side Transfer E: 88.738888 J
+  Energy/bit (sender):  79.21 pJ
+  Energy/bit (both):    206.61 pJ
+  Idle Power:           79.2 W
+
+Size: 1024 MB
+  Avg Latency:          22.251 ms
+  Bandwidth:            48.26 GB/s
+  Sender Transfer E:    79.987298 J
+  Both-side Transfer E: 171.982117 J
+  Energy/bit (sender):  93.12 pJ
+  Energy/bit (both):    200.21 pJ
+  Idle Power:           79.4 W
+
+Size: 2048 MB
+  Avg Latency:          44.395 ms
+  Bandwidth:            48.37 GB/s
+  Sender Transfer E:    155.093632 J
+  Both-side Transfer E: 343.511093 J
+  Energy/bit (sender):  90.28 pJ
+  Energy/bit (both):    199.95 pJ
+  Idle Power:           79.3 W
+
+Size: 4096 MB
+  Avg Latency:          88.744 ms
+  Bandwidth:            48.40 GB/s
+  Sender Transfer E:    293.573775 J
+  Both-side Transfer E: 684.000977 J
+  Energy/bit (sender):  85.44 pJ
+  Energy/bit (both):    199.07 pJ
+  Idle Power:           79.6 W
+

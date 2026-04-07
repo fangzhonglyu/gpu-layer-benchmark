@@ -15,8 +15,8 @@ conda activate bench
 # exit on error
 set -e
 
-python3 -m model_benchmarks.mobilenet_benchmark
-python3 -m model_benchmarks.replknet_benchmark
+# python3 -m model_benchmarks.mobilenet_benchmark
+# python3 -m model_benchmarks.replknet_benchmark
 python3 -m model_benchmarks.llama3_1_8b_benchmark
 python3 -m model_benchmarks.llama3_1_70b_benchmark
 python3 -m model_benchmarks.qwen3_30b_a3b_benchmark

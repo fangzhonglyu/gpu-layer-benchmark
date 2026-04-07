@@ -1,18 +1,18 @@
 Results for qwen3_235b_a22b_decode_b1_kv1024:
-{'name': 'Q-proj', 'iters': 10000, 'avg_latency_ms': 0.05060570678710938, 'avg_energy_J': 0.01204, 'avg_power_W': 237.90700606714412}
-{'name': 'K-proj', 'iters': 10000, 'avg_latency_ms': 0.006340851211547852, 'avg_energy_J': 0.0025793, 'avg_power_W': 406.6670443295052}
-{'name': 'V-proj', 'iters': 10000, 'avg_latency_ms': 0.006354409790039063, 'avg_energy_J': 0.0022159, 'avg_power_W': 348.6219563483514}
-{'name': 'QKT', 'iters': 50000, 'avg_latency_ms': 0.001945247344970703, 'avg_energy_J': 0.00033969999999999996, 'avg_power_W': 174.59767022665756}
-{'name': 'Softmax', 'iters': 50000, 'avg_latency_ms': 0.004034775085449219, 'avg_energy_J': 0.00047874, 'avg_power_W': 118.64293832071323}
-{'name': 'AV', 'iters': 50000, 'avg_latency_ms': 0.0034613388061523437, 'avg_energy_J': 0.00053452, 'avg_power_W': 154.4088525689333}
-{'name': 'O-proj', 'iters': 10000, 'avg_latency_ms': 0.027295269775390624, 'avg_energy_J': 0.0078083, 'avg_power_W': 286.04789642348925}
-{'name': 'Router', 'iters': 50000, 'avg_latency_ms': 0.004914751892089844, 'avg_energy_J': 0.00136228, 'avg_power_W': 277.16017302586704}
-{'name': 'Gate-proj', 'iters': 20000, 'avg_latency_ms': 0.03304774475097656, 'avg_energy_J': 0.046106799999999996, 'avg_power_W': 174.38887308296464}
-{'name': 'Up-proj', 'iters': 20000, 'avg_latency_ms': 0.03305876159667969, 'avg_energy_J': 0.0397028, 'avg_power_W': 150.11680952912354}
-{'name': 'Down-proj', 'iters': 20000, 'avg_latency_ms': 0.013993014526367187, 'avg_energy_J': 0.026945999999999998, 'avg_power_W': 240.6917147447839}
-Total Pipeline Latency (ms): 0.1850518715667725
-Total Pipeline Energy (J): 0.14011434
-Bottleneck Latency (ms): 0.05060570678710938
-Total Pipeline Energy with Idle (J): 0.15683683063911438
+{'name': 'Q-proj', 'iters': 10000, 'avg_latency_ms': 0.052610369873046875, 'avg_energy_J': 0.015905600000000002, 'avg_power_W': 302.31477645636744}
+{'name': 'K-proj', 'iters': 10000, 'avg_latency_ms': 0.006715596771240235, 'avg_energy_J': 0.0, 'avg_power_W': 0.0}
+{'name': 'V-proj', 'iters': 10000, 'avg_latency_ms': 0.00670117416381836, 'avg_energy_J': 0.0024163, 'avg_power_W': 360.4870507476819}
+{'name': 'QKT', 'iters': 50000, 'avg_latency_ms': 0.0020519480895996095, 'avg_energy_J': 0.00040976, 'avg_power_W': 199.65922055631466}
+{'name': 'Softmax', 'iters': 50000, 'avg_latency_ms': 0.004260943298339844, 'avg_energy_J': 0.00050606, 'avg_power_W': 118.75061108656793}
+{'name': 'AV', 'iters': 50000, 'avg_latency_ms': 0.0036633035278320313, 'avg_energy_J': 0.00049652, 'avg_power_W': 135.52196795187612}
+{'name': 'O-proj', 'iters': 10000, 'avg_latency_ms': 0.02756313171386719, 'avg_energy_J': 0.009855899999999999, 'avg_power_W': 357.51772115233916}
+{'name': 'Router', 'iters': 50000, 'avg_latency_ms': 0.005120465698242187, 'avg_energy_J': 0.0011607, 'avg_power_W': 226.65885138513673}
+{'name': 'Gate-proj', 'iters': 20000, 'avg_latency_ms': 0.034464456176757814, 'avg_energy_J': 0.046776, 'avg_power_W': 169.64540095748288}
+{'name': 'Up-proj', 'iters': 20000, 'avg_latency_ms': 0.03445815734863281, 'avg_energy_J': 0.0469748, 'avg_power_W': 170.39580590506966}
+{'name': 'Down-proj', 'iters': 20000, 'avg_latency_ms': 0.014601953125, 'avg_energy_J': 0.028480000000000002, 'avg_power_W': 243.7625750472154}
+Total Pipeline Latency (ms): 0.19221149978637697
+Total Pipeline Energy (J): 0.15298164
+Bottleneck Latency (ms): 0.052610369873046875
+Total Pipeline Energy with Idle (J): 0.17037425559677125
 P2P Transfer Energy (J): 0.000498  [@ 200 pJ/bit]
-Total Pipeline Energy with Idle + P2P (J): 0.157833
+Total Pipeline Energy with Idle + P2P (J): 0.171371

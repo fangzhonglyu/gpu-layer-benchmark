@@ -203,7 +203,7 @@ def process_txt(filepath, pj_per_bit):
     # Parse existing "Total Pipeline Energy with Idle" value
     idle_energy = None
     for line in lines:
-        if 'Total Pipeline Energy with Idle' in line and P2P_TAG not in line:
+        if 'Total Pipeline Energy with Idle' in line and P2P_TAG not in line and TOTAL_P2P_TAG not in line:
             val = re.search(r':\s*([\d.eE+-]+)', line)
             if val:
                 idle_energy = float(val.group(1))
@@ -233,7 +233,7 @@ def _read_idle_energy_from_txt(csv_dir, pipeline_name):
         return None
     with open(txt_path, 'r') as f:
         for line in f:
-            if 'Total Pipeline Energy with Idle' in line and P2P_TAG not in line:
+            if 'Total Pipeline Energy with Idle' in line and P2P_TAG not in line and TOTAL_P2P_TAG not in line:
                 val = re.search(r':\s*([\d.eE+-]+)', line)
                 if val:
                     return float(val.group(1))

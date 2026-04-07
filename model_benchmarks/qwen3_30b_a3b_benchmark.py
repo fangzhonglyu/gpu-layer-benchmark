@@ -24,13 +24,16 @@ PREFILL_ITERS = [20000,  20000,  20000,  50000,  50000,  50000,  20000,  50000, 
 DECODE_ITERS  = [20000,  20000,  20000,  50000,  50000,  50000,  20000,  50000,  20000,  20000,  20000]
 
 
-def expert_gemm_m(b, seq):
-    """Per-device batched GEMM M-dimension for MoE experts.
+def expert_gemm_params(b, seq):
+    """Per-device expert GEMM parameters for MoE.
+
+    Returns (experts_on_device, tokens_per_expert).
+    Each expert has its own weight matrix, so they are separate GEMMs.
 
     Uniform routing: B*S*top_k token-expert pairs across NUM_EXPERTS.
     - total_pairs >= NUM_EXPERTS → all experts active, tpe = total_pairs / NUM_EXPERTS
     - total_pairs <  NUM_EXPERTS → only total_pairs experts active, tpe = 1
-    Active experts evenly split across NUM_DEVICES GPUs, batched into one GEMM.
+    Active experts evenly split across NUM_DEVICES GPUs.
     """
     total_pairs = b * seq * ACTIVE_EXPERTS
     if total_pairs >= NUM_EXPERTS:
@@ -40,13 +43,14 @@ def expert_gemm_m(b, seq):
         tpe = 1
         num_active = total_pairs
     experts_on_device = math.ceil(num_active / NUM_DEVICES)
-    return experts_on_device * tpe
+    return experts_on_device, tpe
 
 
-def expert_phase(name, **kwargs):
-    """Profile per-device expert GEMM, scale energy ×NUM_DEVICES."""
+def expert_phase(name, experts_on_device, **kwargs):
+    """Profile single-expert GEMM, scale to all experts on device × NUM_DEVICES."""
     result = test_matmul_iter(name, **kwargs)
-    result['avg_energy_J'] *= NUM_DEVICES
+    result['avg_latency_ms'] *= experts_on_device
+    result['avg_energy_J']   *= experts_on_device * NUM_DEVICES
     return result
 
 
@@ -57,7 +61,7 @@ def qwen3_30b_pipeline(b, seq, ctx, iters) -> Tuple[str, List]:
     ctx: key/value context length (= seq for prefill, = KV cache len for decode)
     """
     p     = b * seq
-    gem_m = expert_gemm_m(b, seq)
+    eod, tpe = expert_gemm_params(b, seq)
     phases = []
     phases.append(('Q-proj',      lambda: test_matmul_iter("Q-proj",      M=p,            K=HIDDEN, N=Q_DIM,       datatype=float16, iters=iters[0])))
     phases.append(('K-proj',      lambda: test_matmul_iter("K-proj",      M=p,            K=HIDDEN, N=KV_DIM,      datatype=float16, iters=iters[1])))
@@ -67,9 +71,9 @@ def qwen3_30b_pipeline(b, seq, ctx, iters) -> Tuple[str, List]:
     phases.append(('AV',          lambda: test_matmul_iter("AV",          M=HEADS*b*seq,  K=ctx,    N=HEAD_DIM,    datatype=float16, iters=iters[5])))
     phases.append(('O-proj',      lambda: test_matmul_iter("O-proj",      M=p,            K=Q_DIM,  N=HIDDEN,      datatype=float16, iters=iters[6])))
     phases.append(('Router',      lambda: test_matmul_iter("Router",      M=p,            K=HIDDEN, N=NUM_EXPERTS, datatype=float16, iters=iters[7])))
-    phases.append(('Gate-proj',   lambda: expert_phase("Gate-proj",       M=gem_m,        K=HIDDEN, N=MOE_INTER,   datatype=float16, iters=iters[8])))
-    phases.append(('Up-proj',     lambda: expert_phase("Up-proj",         M=gem_m,        K=HIDDEN, N=MOE_INTER,   datatype=float16, iters=iters[9])))
-    phases.append(('Down-proj',   lambda: expert_phase("Down-proj",       M=gem_m,        K=MOE_INTER, N=HIDDEN,   datatype=float16, iters=iters[10])))
+    phases.append(('Gate-proj',   lambda: expert_phase("Gate-proj",       experts_on_device=eod, M=tpe, K=HIDDEN, N=MOE_INTER,   datatype=float16, iters=iters[8])))
+    phases.append(('Up-proj',     lambda: expert_phase("Up-proj",         experts_on_device=eod, M=tpe, K=HIDDEN, N=MOE_INTER,   datatype=float16, iters=iters[9])))
+    phases.append(('Down-proj',   lambda: expert_phase("Down-proj",       experts_on_device=eod, M=tpe, K=MOE_INTER, N=HIDDEN,   datatype=float16, iters=iters[10])))
 
     if seq == 1:
         name = f"qwen3_30b_a3b_decode_b{b}_kv{ctx}"
@@ -89,5 +93,5 @@ def decode_pipelines() -> List[Tuple]:
     return [qwen3_30b_pipeline(b, 1, kv, DECODE_ITERS) for b, kv in product(B, KV)]
 
 
-pipeline_benchmark(output_dir="benchmarks/qwen3_30b_a3b_prefill", pipelines=prefill_pipelines(), device_index=0)
+# pipeline_benchmark(output_dir="benchmarks/qwen3_30b_a3b_prefill", pipelines=prefill_pipelines(), device_index=0)
 pipeline_benchmark(output_dir="benchmarks/qwen3_30b_a3b_decode",  pipelines=decode_pipelines(),  device_index=0)
