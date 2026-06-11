@@ -1,7 +1,8 @@
 from typing import List, Tuple, Callable
 from torch import float16
 
-from kernels import test_matmul_iter, test_conv_iter, device_from_env
+from kernels import (test_matmul_iter, test_conv_iter, device_from_env,
+                     link_model_from_env, transfer_curve_from_env)
 from pipeline_benchmark import pipeline_benchmark
 
 # Canonical (unique-in-DB) operators for mobilenet_v3_small — match workloads/
@@ -38,7 +39,7 @@ def mobilenet_v3_small_pipeline(N: int) -> Tuple[str, List[Tuple[str, Callable]]
         # features.2.block.2.0 — 1x1 project conv (72 -> 24), P=28
         ("layer8_features_2_block_2_0",   lambda: test_conv_iter("layer8_features_2_block_2_0",   C=72,  G=1,   M=24, N=N, P=28, Q=28, R=1, S=1, HS=1, WS=1, datatype=float16, iters=ITERS[2])),
         # features.5.block.2.fc1 — SE squeeze fc1 (240 -> 64)
-        ("layer19_features_5_block_2_fc1",lambda: test_matmul_iter("layer19_features_5_block_2_fc1", M=64, K=240, N=N, datatype=float16, iters=ITERS[3])),
+        ("layer19_features_5_block_2_fc1",lambda: test_matmul_iter("layer19_features_5_block_2_fc1", M=N, K=240, N=64, datatype=float16, iters=ITERS[3])),
         # features.10.block.1.0 — 5x5 depthwise (576 groups), P=7
         ("layer43_features_10_block_1_0", lambda: test_conv_iter("layer43_features_10_block_1_0", C=1,   G=576, M=1,  N=N, P=7, Q=7, R=5, S=5, HS=1, WS=1, datatype=float16, iters=ITERS[4])),
     ]
@@ -49,4 +50,7 @@ def mobilenet_v3_small_pipeline(N: int) -> Tuple[str, List[Tuple[str, Callable]]
 B = [1, 4, 8, 16]
 pipelines = [mobilenet_v3_small_pipeline(n) for n in B]
 
-pipeline_benchmark(output_dir="benchmarks/mobilenet_v3_small", pipelines=pipelines, device_index=device_from_env())
+LINK = link_model_from_env()  # PCIE_LINK_JSON=<path> to model step-④ transfer
+CURVE = transfer_curve_from_env(default_measured=True)  # size-dependent bw+pj/bit; PCIE_CURVE_JSON=<path> overrides
+pipeline_benchmark(output_dir="benchmarks/mobilenet_v3_small", pipelines=pipelines,
+                   device_index=device_from_env(), link_model=LINK, transfer_curve=CURVE)

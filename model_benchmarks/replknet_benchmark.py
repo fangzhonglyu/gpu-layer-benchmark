@@ -1,7 +1,8 @@
 from typing import List, Tuple, Callable
 from torch import float16
 
-from kernels import test_conv_iter, device_from_env
+from kernels import (test_conv_iter, device_from_env,
+                     link_model_from_env, transfer_curve_from_env)
 from pipeline_benchmark import pipeline_benchmark
 
 # Canonical (unique-in-DB) operators for replknet31b — match workloads/replknet31b/
@@ -45,4 +46,7 @@ def replknet_31b_pipeline(N: int) -> Tuple[str, List[Tuple[str, Callable]], List
 B = [1, 4, 8, 16]
 pipelines = [replknet_31b_pipeline(n) for n in B]
 
-pipeline_benchmark(output_dir="benchmarks/replknet_31b", pipelines=pipelines, device_index=device_from_env())
+LINK = link_model_from_env()  # PCIE_LINK_JSON=<path> to model step-④ transfer
+CURVE = transfer_curve_from_env(default_measured=True)  # size-dependent bw+pj/bit; PCIE_CURVE_JSON=<path> overrides
+pipeline_benchmark(output_dir="benchmarks/replknet_31b", pipelines=pipelines,
+                   device_index=device_from_env(), link_model=LINK, transfer_curve=CURVE)
