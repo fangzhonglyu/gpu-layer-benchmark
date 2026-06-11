@@ -3,7 +3,7 @@ from typing import List, Tuple
 from itertools import product
 from torch import float16
 
-from kernels import test_matmul_iter, test_softmax_iter
+from kernels import test_matmul_iter, test_fused_qk_softmax_iter, link_model_from_env, transfer_curve_from_env
 from pipeline_benchmark import pipeline_benchmark
 
 # Qwen3 235B-A22B (MoE) architecture
@@ -19,9 +19,26 @@ ACTIVE_EXPERTS  = 8
 MOE_INTER       = 1536  # moe_intermediate_size per expert
 NUM_DEVICES     = 8     # expert-parallel GPUs
 
-#                Q-proj  K-proj  V-proj  QKT     Softmax AV      O-proj  Router  Gate    Up      Down
-PREFILL_ITERS = [10000,  10000,  10000,  30000,  30000,  30000,  10000,  30000,  10000,  10000,  10000]
-DECODE_ITERS  = [10000,  10000,  10000,  50000,  50000,  50000,  10000,  50000,  20000,  20000,  20000]
+# Canonical decoder-layer operators (match workloads/<net>/ and unified_database).
+# lm_head excluded (global op). expert_up_proj is NOT a separate op: it has the same
+# dimensions as expert_gate_proj and is deduplicated to it in the unified DB / cp_spec.
+# attn_qk + softmax fused into one 'attn_scores' op (scores stay on-chip).
+#                q_proj  k_proj  v_proj  attn_scores  attn_v  o_proj  router  e_gate  e_down
+PREFILL_ITERS = [10000,  10000,  10000,  30000,       30000,  10000,  30000,  10000,  10000]
+DECODE_ITERS  = [10000,  10000,  10000,  50000,       50000,  10000,  50000,  20000,  20000]
+
+# Operator DAG (Qwen3 MoE decoder layer). Attention: qk+softmax fused into a single
+# 'attn_scores' op (scores stay on-chip; test_fused_qk_softmax_iter). MLP is MoE:
+# o_proj -> router -> expert_gate -> expert_down (expert_up folded into gate).
+LEVELS = [
+    ['layer0_q_proj', 'layer0_k_proj', 'layer0_v_proj'],
+    ['layer0_attn_scores'],
+    ['layer0_attn_v'],
+    ['layer0_o_proj'],
+    ['router'],
+    ['expert_gate_proj'],
+    ['expert_down_proj'],
+]
 
 
 def expert_gemm_params(b, seq):
@@ -47,14 +64,18 @@ def expert_gemm_params(b, seq):
 
 
 def expert_phase(name, experts_on_device, **kwargs):
-    """Profile single-expert GEMM, scale to all experts on device × NUM_DEVICES."""
+    """Profile single-expert GEMM, scale to all experts on device × NUM_DEVICES.
+
+    Latency is per-device (experts on one device run serially, devices run in
+    parallel); energy is the whole system (all experts on all devices).
+    """
     result = test_matmul_iter(name, **kwargs)
     result['avg_latency_ms'] *= experts_on_device
     result['avg_energy_J']   *= experts_on_device * NUM_DEVICES
     return result
 
 
-def qwen3_235b_pipeline(b, seq, ctx, iters) -> Tuple[str, List]:
+def qwen3_235b_pipeline(b, seq, ctx, iters) -> Tuple[str, List, List]:
     """
     b:   batch size
     seq: query sequence length (S for prefill, 1 for decode)
@@ -62,24 +83,48 @@ def qwen3_235b_pipeline(b, seq, ctx, iters) -> Tuple[str, List]:
     """
     p     = b * seq
     eod, tpe = expert_gemm_params(b, seq)
-    phases = []
-    phases.append(('Q-proj',      lambda: test_matmul_iter("Q-proj",      M=p,            K=HIDDEN, N=Q_DIM,       datatype=float16, iters=iters[0])))
-    phases.append(('K-proj',      lambda: test_matmul_iter("K-proj",      M=p,            K=HIDDEN, N=KV_DIM,      datatype=float16, iters=iters[1])))
-    phases.append(('V-proj',      lambda: test_matmul_iter("V-proj",      M=p,            K=HIDDEN, N=KV_DIM,      datatype=float16, iters=iters[2])))
-    phases.append(('QKT',         lambda: test_matmul_iter("QKT",         M=HEADS*b*seq,  K=HEAD_DIM, N=ctx,       datatype=float16, iters=iters[3])))
-    phases.append(('Softmax',     lambda: test_softmax_iter("Softmax",    N=HEADS*b*seq,  M=ctx,                   datatype=float16, iters=iters[4])))
-    phases.append(('AV',          lambda: test_matmul_iter("AV",          M=HEADS*b*seq,  K=ctx,    N=HEAD_DIM,    datatype=float16, iters=iters[5])))
-    phases.append(('O-proj',      lambda: test_matmul_iter("O-proj",      M=p,            K=Q_DIM,  N=HIDDEN,      datatype=float16, iters=iters[6])))
-    phases.append(('Router',      lambda: test_matmul_iter("Router",      M=p,            K=HIDDEN, N=NUM_EXPERTS, datatype=float16, iters=iters[7])))
-    phases.append(('Gate-proj',   lambda: expert_phase("Gate-proj",       experts_on_device=eod, M=tpe, K=HIDDEN, N=MOE_INTER,   datatype=float16, iters=iters[8])))
-    phases.append(('Up-proj',     lambda: expert_phase("Up-proj",         experts_on_device=eod, M=tpe, K=HIDDEN, N=MOE_INTER,   datatype=float16, iters=iters[9])))
-    phases.append(('Down-proj',   lambda: expert_phase("Down-proj",       experts_on_device=eod, M=tpe, K=MOE_INTER, N=HIDDEN,   datatype=float16, iters=iters[10])))
+
+    # DAG edges for inter-chiplet P2P (mirrors create_qwen_moe_cp_spec). Attention
+    # edges derive bytes from each op's output; MoE edges use explicit whole-batch
+    # volumes because the measured expert ops are single-expert GEMMs:
+    #   dispatch  o_proj -> experts : every token sent to ACTIVE_EXPERTS experts
+    #   expert intermediate gate->down : ACTIVE_EXPERTS pairs per token
+    #   combine   expert_down -> next-layer q/k/v (hidden), wrap-around
+    disp_elems   = p * ACTIVE_EXPERTS * HIDDEN      # token dispatch to experts
+    einter_elems = p * ACTIVE_EXPERTS * MOE_INTER   # expert gate output -> down
+    hidden_elems = p * HIDDEN                        # combined hidden activation
+    edges = [
+        ('expert_down_proj', 'layer0_q_proj', hidden_elems),   # wrap: hidden -> next q/k/v
+        ('expert_down_proj', 'layer0_k_proj', hidden_elems),
+        ('expert_down_proj', 'layer0_v_proj', hidden_elems),
+        ('layer0_q_proj',    'layer0_attn_scores'),
+        ('layer0_k_proj',    'layer0_attn_scores'),
+        ('layer0_attn_scores', 'layer0_attn_v'),
+        ('layer0_v_proj',    'layer0_attn_v'),
+        ('layer0_attn_v',    'layer0_o_proj'),
+        ('layer0_o_proj',    'router'),
+        ('layer0_o_proj',    'expert_gate_proj', disp_elems),  # dispatch hidden tokens
+        ('router',           'expert_gate_proj'),              # gating control (router logits)
+        ('expert_gate_proj', 'expert_down_proj', einter_elems),
+    ]
+
+    phases = [
+        ('layer0_q_proj',    lambda: test_matmul_iter("layer0_q_proj",   M=p,           K=HIDDEN,   N=Q_DIM,       datatype=float16, iters=iters[0])),
+        ('layer0_k_proj',    lambda: test_matmul_iter("layer0_k_proj",   M=p,           K=HIDDEN,   N=KV_DIM,      datatype=float16, iters=iters[1])),
+        ('layer0_v_proj',    lambda: test_matmul_iter("layer0_v_proj",   M=p,           K=HIDDEN,   N=KV_DIM,      datatype=float16, iters=iters[2])),
+        ('layer0_attn_scores', lambda: test_fused_qk_softmax_iter("layer0_attn_scores", rows=HEADS*b*seq, head_dim=HEAD_DIM, ctx=ctx, datatype=float16, iters=iters[3])),
+        ('layer0_attn_v',    lambda: test_matmul_iter("layer0_attn_v",   M=HEADS*b*seq, K=ctx,      N=HEAD_DIM,    datatype=float16, iters=iters[4])),
+        ('layer0_o_proj',    lambda: test_matmul_iter("layer0_o_proj",   M=p,           K=Q_DIM,    N=HIDDEN,      datatype=float16, iters=iters[5])),
+        ('router',           lambda: test_matmul_iter("router",          M=p,           K=HIDDEN,   N=NUM_EXPERTS, datatype=float16, iters=iters[6])),
+        ('expert_gate_proj', lambda: expert_phase("expert_gate_proj",    experts_on_device=eod, M=tpe, K=HIDDEN,    N=MOE_INTER, datatype=float16, iters=iters[7])),
+        ('expert_down_proj', lambda: expert_phase("expert_down_proj",    experts_on_device=eod, M=tpe, K=MOE_INTER, N=HIDDEN,    datatype=float16, iters=iters[8])),
+    ]
 
     if seq == 1:
         name = f"qwen3_235b_a22b_decode_b{b}_kv{ctx}"
     else:
         name = f"qwen3_235b_a22b_prefill_b{b}_s{seq}"
-    return name, phases
+    return name, phases, LEVELS, edges
 
 
 def prefill_pipelines() -> List[Tuple]:
@@ -93,5 +138,8 @@ def decode_pipelines() -> List[Tuple]:
     return [qwen3_235b_pipeline(b, 1, kv, DECODE_ITERS) for b, kv in product(B, KV)]
 
 
-# pipeline_benchmark(output_dir="benchmarks/qwen3_235b_a22b_prefill", pipelines=prefill_pipelines(), device_index=0)
-pipeline_benchmark(output_dir="benchmarks/qwen3_235b_a22b_decode",  pipelines=decode_pipelines(),  device_index=0)
+if __name__ == "__main__":
+    LINK = link_model_from_env()  # PCIE_LINK_JSON=<path> to model step-④ transfer
+    CURVE = transfer_curve_from_env(default_measured=True)  # size-dependent bw+pj/bit; PCIE_CURVE_JSON=<path> overrides
+    # pipeline_benchmark(output_dir="benchmarks/qwen3_235b_a22b_prefill", pipelines=prefill_pipelines(), device_index=0, link_model=LINK, transfer_curve=CURVE)
+    pipeline_benchmark(output_dir="benchmarks/qwen3_235b_a22b_decode",  pipelines=decode_pipelines(),  device_index=0, link_model=LINK, transfer_curve=CURVE)

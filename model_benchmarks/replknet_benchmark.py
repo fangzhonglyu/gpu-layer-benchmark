@@ -4,35 +4,42 @@ from torch import float16
 from kernels import test_conv_iter
 from pipeline_benchmark import pipeline_benchmark
 
-ITERS = [50000] * 12
-ITERS[1] = 500   # layer2  large kernel 31x31
-ITERS[7] = 500   # layer14 large kernel 29x29
+# Canonical (unique-in-DB) operators for replknet31b — match workloads/replknet31b/
+# after alignment to unified_database. Other block operators are duplicates folded
+# into the shared DB and live under workloads/replknet31b/additional/.
+ITERS = [50000, 500, 50000, 50000]   # layer14 is a 29x29 large kernel -> fewer iters
+
+# Operator DAG: CNN is a linear chain (create_cnn_cp_spec), one op per level,
+# in network (layer-index) order.
+LEVELS = [
+    ['layer1_stages_0_blocks_0_pw1_conv'],
+    ['layer14_stages_1_blocks_0_large_kernel_lkb_origin_conv'],
+    ['layer15_stages_1_blocks_0_large_kernel_small_conv_conv'],
+    ['layer16_stages_1_blocks_0_pw2_conv'],
+]
+
+# DAG edges for inter-chiplet P2P: linear chain over the canonical layers (CNN, no
+# repeated block / wrap-around). Transfer bytes derive from each layer's output.
+EDGES = [
+    ('layer1_stages_0_blocks_0_pw1_conv',                      'layer14_stages_1_blocks_0_large_kernel_lkb_origin_conv'),
+    ('layer14_stages_1_blocks_0_large_kernel_lkb_origin_conv', 'layer15_stages_1_blocks_0_large_kernel_small_conv_conv'),
+    ('layer15_stages_1_blocks_0_large_kernel_small_conv_conv', 'layer16_stages_1_blocks_0_pw2_conv'),
+]
 
 
-def replknet_31b_pipeline(N: int) -> Tuple[str, List[Tuple[str, Callable]]]:
-    phases = []
-    # --- Stage 0, Block 0 (P=56) ---
-    phases.append(("layer01_s0b0_pw1",        lambda: test_conv_iter("layer01_s0b0_pw1",        C=128, G=1,   M=128, N=N, P=56, Q=56, R=1,  S=1,  HS=1, WS=1, datatype=float16, iters=ITERS[0])))
-    phases.append(("layer02_s0b0_lk31",       lambda: test_conv_iter("layer02_s0b0_lk31",       C=1,   G=128, M=1,   N=N, P=56, Q=56, R=31, S=31, HS=1, WS=1, datatype=float16, iters=ITERS[1])))
-    phases.append(("layer03_s0b0_sk5",        lambda: test_conv_iter("layer03_s0b0_sk5",        C=1,   G=128, M=1,   N=N, P=56, Q=56, R=5,  S=5,  HS=1, WS=1, datatype=float16, iters=ITERS[2])))
-    phases.append(("layer04_s0b0_pw2",        lambda: test_conv_iter("layer04_s0b0_pw2",        C=128, G=1,   M=128, N=N, P=56, Q=56, R=1,  S=1,  HS=1, WS=1, datatype=float16, iters=ITERS[3])))
-
-    # --- Stage 0, Block 1 (FFN-like, P=56) ---
-    phases.append(("layer05_s0b1_pw1",        lambda: test_conv_iter("layer05_s0b1_pw1",        C=128, G=1,   M=512, N=N, P=56, Q=56, R=1,  S=1,  HS=1, WS=1, datatype=float16, iters=ITERS[4])))
-    phases.append(("layer06_s0b1_pw2",        lambda: test_conv_iter("layer06_s0b1_pw2",        C=512, G=1,   M=128, N=N, P=56, Q=56, R=1,  S=1,  HS=1, WS=1, datatype=float16, iters=ITERS[5])))
-
-    # --- Stage 1, Block 0 (P=28) ---
-    phases.append(("layer13_s1b0_pw1",        lambda: test_conv_iter("layer13_s1b0_pw1",        C=256, G=1,   M=256,  N=N, P=28, Q=28, R=1,  S=1,  HS=1, WS=1, datatype=float16, iters=ITERS[6])))
-    phases.append(("layer14_s1b0_lk29",       lambda: test_conv_iter("layer14_s1b0_lk29",       C=1,   G=256, M=1,    N=N, P=28, Q=28, R=29, S=29, HS=1, WS=1, datatype=float16, iters=ITERS[7])))
-    phases.append(("layer15_s1b0_sk5",        lambda: test_conv_iter("layer15_s1b0_sk5",        C=1,   G=256, M=1,    N=N, P=28, Q=28, R=5,  S=5,  HS=1, WS=1, datatype=float16, iters=ITERS[8])))
-    phases.append(("layer16_s1b0_pw2",        lambda: test_conv_iter("layer16_s1b0_pw2",        C=256, G=1,   M=256,  N=N, P=28, Q=28, R=1,  S=1,  HS=1, WS=1, datatype=float16, iters=ITERS[9])))
-
-    # --- Stage 1, Block 1 (FFN-like, P=28) ---
-    phases.append(("layer17_s1b1_pw1",        lambda: test_conv_iter("layer17_s1b1_pw1",        C=256,  G=1,  M=1024, N=N, P=28, Q=28, R=1,  S=1,  HS=1, WS=1, datatype=float16, iters=ITERS[10])))
-    phases.append(("layer18_s1b1_pw2",        lambda: test_conv_iter("layer18_s1b1_pw2",        C=1024, G=1,  M=256,  N=N, P=28, Q=28, R=1,  S=1,  HS=1, WS=1, datatype=float16, iters=ITERS[11])))
-
+def replknet_31b_pipeline(N: int) -> Tuple[str, List[Tuple[str, Callable]], List]:
+    phases = [
+        # stage0.block0.pw1 — 1x1 conv (128 -> 128), P=56
+        ("layer1_stages_0_blocks_0_pw1_conv",                       lambda: test_conv_iter("layer1_stages_0_blocks_0_pw1_conv",                       C=128, G=1,   M=128, N=N, P=56, Q=56, R=1,  S=1,  HS=1, WS=1, datatype=float16, iters=ITERS[0])),
+        # stage1.block0.large_kernel — 29x29 depthwise (256 groups), P=28
+        ("layer14_stages_1_blocks_0_large_kernel_lkb_origin_conv",  lambda: test_conv_iter("layer14_stages_1_blocks_0_large_kernel_lkb_origin_conv",  C=1,   G=256, M=1,   N=N, P=28, Q=28, R=29, S=29, HS=1, WS=1, datatype=float16, iters=ITERS[1])),
+        # stage1.block0.small_kernel — 5x5 depthwise (256 groups), P=28
+        ("layer15_stages_1_blocks_0_large_kernel_small_conv_conv",  lambda: test_conv_iter("layer15_stages_1_blocks_0_large_kernel_small_conv_conv",  C=1,   G=256, M=1,   N=N, P=28, Q=28, R=5,  S=5,  HS=1, WS=1, datatype=float16, iters=ITERS[2])),
+        # stage1.block0.pw2 — 1x1 conv (256 -> 256), P=28
+        ("layer16_stages_1_blocks_0_pw2_conv",                      lambda: test_conv_iter("layer16_stages_1_blocks_0_pw2_conv",                      C=256, G=1,   M=256, N=N, P=28, Q=28, R=1,  S=1,  HS=1, WS=1, datatype=float16, iters=ITERS[3])),
+    ]
     name = f"replknet31b_b{N}"
-    return name, phases
+    return name, phases, LEVELS, EDGES
 
 
 B = [1, 4, 8, 16]
