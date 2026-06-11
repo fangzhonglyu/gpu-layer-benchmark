@@ -94,5 +94,5 @@ if __name__ == "__main__":
     # to fold real PCIe transfer into bottleneck + critical path; unset = energy-only.
     LINK = link_model_from_env()
     CURVE = transfer_curve_from_env(default_measured=True)  # size-dependent bw+pj/bit; PCIE_CURVE_JSON=<path> overrides
-    #pipeline_benchmark(output_dir="benchmarks/llama3.1_8b_prefill", pipelines=prefill_pipelines(), device_index=0, link_model=LINK, transfer_curve=CURVE)
+    pipeline_benchmark(output_dir="benchmarks/llama3.1_8b_prefill", pipelines=prefill_pipelines(), device_index=0, link_model=LINK, transfer_curve=CURVE)
     pipeline_benchmark(output_dir="benchmarks/llama3.1_8b_decode",  pipelines=decode_pipelines(),  device_index=0, link_model=LINK, transfer_curve=CURVE)

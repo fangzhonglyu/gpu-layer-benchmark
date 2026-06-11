@@ -93,5 +93,5 @@ def decode_pipelines() -> List[Tuple]:
 if __name__ == "__main__":
     LINK = link_model_from_env()  # PCIE_LINK_JSON=<path> to model step-④ transfer
     CURVE = transfer_curve_from_env(default_measured=True)  # size-dependent bw+pj/bit; PCIE_CURVE_JSON=<path> overrides
-    #pipeline_benchmark(output_dir="benchmarks/llama3.1_70b_prefill", pipelines=prefill_pipelines(), device_index=0, link_model=LINK, transfer_curve=CURVE)
+    pipeline_benchmark(output_dir="benchmarks/llama3.1_70b_prefill", pipelines=prefill_pipelines(), device_index=0, link_model=LINK, transfer_curve=CURVE)
     pipeline_benchmark(output_dir="benchmarks/llama3.1_70b_decode",  pipelines=decode_pipelines(),  device_index=0, link_model=LINK, transfer_curve=CURVE)
