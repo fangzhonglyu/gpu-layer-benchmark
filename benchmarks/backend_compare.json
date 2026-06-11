@@ -1,0 +1,159 @@
+{
+  "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+  "torch": "2.10.0+cu128",
+  "gemm": [
+    {
+      "op": "gemm",
+      "M": 4096,
+      "K": 4096,
+      "N": 4096,
+      "pytorch_ms": 0.4710604858398437,
+      "triton_ms": 0.39995849609375,
+      "best_ms": 0.3816180165608724,
+      "pytorch_tflops": 291.764980514048,
+      "triton_tflops": 343.6330389635839,
+      "best_tflops": 360.1479686692856,
+      "winner": "triton"
+    },
+    {
+      "op": "gemm",
+      "M": 4096,
+      "K": 4096,
+      "N": 11008,
+      "pytorch_ms": 1.2041995239257812,
+      "triton_ms": 0.9810950724283855,
+      "best_ms": 0.9797084554036458,
+      "pytorch_tflops": 306.7325473205928,
+      "triton_tflops": 376.4846015807115,
+      "best_tflops": 377.01745393614925,
+      "winner": "triton"
+    },
+    {
+      "op": "gemm",
+      "M": 2048,
+      "K": 12288,
+      "N": 4096,
+      "pytorch_ms": 0.6974337259928386,
+      "triton_ms": 0.5782310485839843,
+      "best_ms": 0.5762283833821614,
+      "pytorch_tflops": 295.595728346118,
+      "triton_tflops": 356.5329650022362,
+      "best_tflops": 357.77208508535637,
+      "winner": "triton"
+    },
+    {
+      "op": "gemm",
+      "M": 32,
+      "K": 4096,
+      "N": 4096,
+      "pytorch_ms": 0.010711359977722167,
+      "triton_ms": 0.012650986512502035,
+      "best_ms": 0.011602239608764648,
+      "pytorch_tflops": 100.24327687923876,
+      "triton_tflops": 84.87415767449443,
+      "best_tflops": 92.5460824984916,
+      "winner": "pytorch"
+    },
+    {
+      "op": "gemm",
+      "M": 128,
+      "K": 8192,
+      "N": 8192,
+      "pytorch_ms": 0.07704095840454102,
+      "triton_ms": 0.09427242914835612,
+      "best_ms": 0.07348288218180339,
+      "pytorch_tflops": 222.9965662393339,
+      "triton_tflops": 182.23641142166935,
+      "best_tflops": 233.79416639504458,
+      "winner": "pytorch"
+    }
+  ],
+  "softmax": [
+    {
+      "op": "softmax",
+      "R": 4096,
+      "C": 4096,
+      "pytorch_ms": 0.04921109199523926,
+      "triton_ms": 0.026676801045735676,
+      "pytorch_gbps": 1363.693860044646,
+      "triton_gbps": 2515.626363331425,
+      "winner": "triton"
+    },
+    {
+      "op": "softmax",
+      "R": 8192,
+      "C": 8192,
+      "pytorch_ms": 0.22897781372070314,
+      "triton_ms": 0.18297835032145182,
+      "pytorch_gbps": 1172.3208097681704,
+      "triton_gbps": 1467.033971660687,
+      "winner": "triton"
+    },
+    {
+      "op": "softmax",
+      "R": 2048,
+      "C": 2048,
+      "pytorch_ms": 0.008673706849416096,
+      "triton_ms": 0.007481599648793538,
+      "pytorch_gbps": 1934.261359216841,
+      "triton_gbps": 2242.463749407581,
+      "winner": "triton"
+    }
+  ],
+  "conv": [
+    {
+      "op": "conv",
+      "N": 32,
+      "C": 256,
+      "H": 56,
+      "W": 56,
+      "M": 256,
+      "R": 3,
+      "stride": 1,
+      "pad": 1,
+      "pytorch_ms": 0.70471435546875,
+      "triton_ms": 0.4908323160807292,
+      "best_ms": 0.48667073567708335,
+      "pytorch_tflops": 167.98300641578098,
+      "triton_tflops": 241.18223722769216,
+      "best_tflops": 243.24461574888642,
+      "winner": "triton"
+    },
+    {
+      "op": "conv",
+      "N": 32,
+      "C": 128,
+      "H": 112,
+      "W": 112,
+      "M": 128,
+      "R": 3,
+      "stride": 1,
+      "pad": 1,
+      "pytorch_ms": 0.8807353719075521,
+      "triton_ms": 0.5665639241536459,
+      "best_ms": 0.5357476298014323,
+      "pytorch_tflops": 134.4104482139795,
+      "triton_tflops": 208.94382972378708,
+      "best_tflops": 220.9623141774346,
+      "winner": "triton"
+    },
+    {
+      "op": "conv",
+      "N": 16,
+      "C": 512,
+      "H": 28,
+      "W": 28,
+      "M": 512,
+      "R": 3,
+      "stride": 1,
+      "pad": 1,
+      "pytorch_ms": 0.3268886311848958,
+      "triton_ms": 0.3056312561035156,
+      "best_ms": 0.3030742390950521,
+      "pytorch_tflops": 181.07089816323636,
+      "triton_tflops": 193.66480641611034,
+      "best_tflops": 195.29874338622506,
+      "winner": "triton"
+    }
+  ]
+}

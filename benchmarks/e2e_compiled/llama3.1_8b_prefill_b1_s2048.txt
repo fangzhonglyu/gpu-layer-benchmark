@@ -1,0 +1,17 @@
+Results for llama3.1_8b_prefill_b1_s2048:
+{'name': 'layer0_q_proj', 'iters': 7500, 'avg_latency_ms': 0.20248450520833333, 'avg_energy_J': 0.11998013333333334, 'avg_power_W': 592.5248341449377, 'out_elems': 8388608}
+{'name': 'layer0_k_proj', 'iters': 19300, 'avg_latency_ms': 0.07790655738949158, 'avg_energy_J': 0.04663202072538861, 'avg_power_W': 598.5484397862566, 'out_elems': 2097152}
+{'name': 'layer0_v_proj', 'iters': 19300, 'avg_latency_ms': 0.07797374666045985, 'avg_energy_J': 0.046650310880829014, 'avg_power_W': 598.2677213529363, 'out_elems': 2097152}
+{'name': 'layer0_attn_scores', 'iters': 4100, 'avg_latency_ms': 0.5667959473283055, 'avg_energy_J': 0.29138022785622597, 'avg_power_W': 514.0831179716422, 'out_elems': 134217728, 'scores_on_chip': False}
+{'name': 'layer0_attn_v', 'iters': 7700, 'avg_latency_ms': 0.19658550311992695, 'avg_energy_J': 0.11307038961038962, 'avg_power_W': 575.1554496296314, 'out_elems': 8388608}
+{'name': 'layer0_o_proj', 'iters': 7400, 'avg_latency_ms': 0.20379059662690033, 'avg_energy_J': 0.12175418918918919, 'avg_power_W': 597.4338938692662, 'out_elems': 8388608}
+{'name': 'layer0_gate_proj', 'iters': 2200, 'avg_latency_ms': 0.6900414484197444, 'avg_energy_J': 0.4092522727272727, 'avg_power_W': 593.0682151160515, 'out_elems': 29360128}
+{'name': 'layer0_up_proj', 'iters': 2200, 'avg_latency_ms': 0.6909444358132102, 'avg_energy_J': 0.43635181818181823, 'avg_power_W': 631.5054633321629, 'out_elems': 29360128}
+{'name': 'layer0_down_proj', 'iters': 2100, 'avg_latency_ms': 0.7154588099888393, 'avg_energy_J': 0.4287185714285714, 'avg_power_W': 599.200889194325, 'out_elems': 8388608}
+Critical Path Latency (ms): 2.5760597980855158
+Total Pipeline Energy (J): 2.013789933933018
+Bottleneck Latency (ms): 0.7154588099888393
+Total Pipeline Energy with Idle (J): 2.1495615822035137
+P2P Transfer Energy (J): 0.8187281407999999  [@ 200 pJ/bit]
+Total Pipeline Energy with Idle + P2P (J): 2.9682897230035135
+--- Inter-card transfer (step 4): NOT modelled (no link_model/curve; transfer latency assumed 0) ---

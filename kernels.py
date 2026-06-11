@@ -25,6 +25,28 @@ DTYPE_BYTES = 2             # float16 activations
 
 handle = None  # Global variable to hold NVML handle
 
+# --- Optional compiler backend (Inductor max-autotune) ----------------------
+# When COMPILE_BACKEND is set, each op's kernel is replaced by a torch.compile'd
+# callable in "max-autotune" mode. Inductor benchmarks BOTH the ATen (cuBLAS/cuDNN)
+# kernel and its Triton template per shape and keeps the faster one -- so this is a
+# per-shape max(cuBLAS, Triton), not a blanket switch to Triton. The measured op
+# still flows through test_kernel_iter (CUDA-graph + NVML energy), so latency AND
+# energy are real. Eager (default) reproduces the original cuBLAS/cuDNN behaviour.
+COMPILE_BACKEND = os.environ.get("COMPILE_BACKEND", "0") not in ("0", "", "false", "False")
+COMPILE_MODE = os.environ.get("COMPILE_MODE", "max-autotune-no-cudagraphs")  # graph capture done by test_kernel_iter
+if COMPILE_BACKEND:
+    import torch._dynamo
+    torch._dynamo.config.cache_size_limit = 1024   # many distinct op shapes per model
+    print(f"[compile] COMPILE_BACKEND on (mode={COMPILE_MODE}; Inductor picks max(cuBLAS/cuDNN, Triton) per shape)")
+
+def _maybe_compile(fn: Callable) -> Callable:
+    """Return fn unchanged in eager mode; else a torch.compile'd (max-autotune) version.
+    Built once per op call site so Inductor autotunes for that op's fixed shapes; the
+    first warmup call in test_kernel_iter triggers (and absorbs) the compile/autotune."""
+    if not COMPILE_BACKEND:
+        return fn
+    return torch.compile(fn, mode=COMPILE_MODE, dynamic=False)
+
 
 # --- Inter-card transfer (step ④) latency model -----------------------------
 # Step ④ (move a stage's output activation to the next card's DRAM) uses the
@@ -603,6 +625,7 @@ def test_kernel_iter(name: str, setup_func: Callable, capture_func: Callable, it
     }
 
 def test_matmul_iter(name: str, M:int, K:int, N:int, datatype:torch.dtype=torch.float16, iters:int=100):
+    mm = _maybe_compile(lambda a, b: torch.matmul(a, b))   # eager: identity wrapper
     def setup():
         input1 = torch.randn(M, K, dtype=datatype, device='cuda')
         input2 = torch.randn(K, N, dtype=datatype, device='cuda')
@@ -611,7 +634,10 @@ def test_matmul_iter(name: str, M:int, K:int, N:int, datatype:torch.dtype=torch.
 
     def capture(state):
         input1, input2, output = state
-        torch.matmul(input1, input2, out=output)
+        if COMPILE_BACKEND:
+            output = mm(input1, input2)                    # compiled fn allocates its output
+        else:
+            torch.matmul(input1, input2, out=output)
         return output
 
     res = test_kernel_iter(name, setup, capture, iters)
@@ -620,6 +646,7 @@ def test_matmul_iter(name: str, M:int, K:int, N:int, datatype:torch.dtype=torch.
 
 def test_softmax_iter(name: str,N:int, M:int, datatype:torch.dtype=torch.float16, iters:int=100,
                       ring_override: Optional[int] = None):
+    sm = _maybe_compile(lambda x: torch.softmax(x, dim=-1))
     def setup():
         input_tensor = torch.randn(N, M, dtype=datatype, device='cuda')
         output_tensor = torch.empty_like(input_tensor)
@@ -627,7 +654,10 @@ def test_softmax_iter(name: str,N:int, M:int, datatype:torch.dtype=torch.float16
 
     def capture(state):
         input_tensor, output_tensor = state
-        torch.softmax(input_tensor, dim=-1, out=output_tensor)
+        if COMPILE_BACKEND:
+            output_tensor = sm(input_tensor)
+        else:
+            torch.softmax(input_tensor, dim=-1, out=output_tensor)
         return output_tensor
 
     res = test_kernel_iter(name, setup, capture, iters, ring_override=ring_override)
@@ -697,6 +727,7 @@ def test_conv_iter(name: str, N, C, P, Q, M, G, R, S, HS:int, WS:int, datatype:t
     - HS: height stride
     - WS: width stride
     """
+    conv = _maybe_compile(lambda x, w: torch.nn.functional.conv2d(x, w, stride=(HS, WS), groups=G))
     def setup():
         H_in = (P-1) * HS + R # Input height
         W_in = (Q-1) * WS + S # Input width
@@ -710,6 +741,8 @@ def test_conv_iter(name: str, N, C, P, Q, M, G, R, S, HS:int, WS:int, datatype:t
 
     def capture(state):
         input_tensor, weight_tensor = state
+        if COMPILE_BACKEND:
+            return conv(input_tensor, weight_tensor)
         torch.nn.functional.conv2d(input_tensor, weight_tensor, stride=(HS, WS), groups=G)
 
     res = test_kernel_iter(name, setup, capture, iters)

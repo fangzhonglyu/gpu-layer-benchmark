@@ -1,3 +1,7 @@
 __pycache__
 OUTPUT.txt
 /deprecated
+# inductor cache + run logs (machine-specific, not source)
+compiled_cache.db
+logs/
+*.log

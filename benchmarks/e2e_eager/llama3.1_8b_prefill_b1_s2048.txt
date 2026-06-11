@@ -1,0 +1,17 @@
+Results for llama3.1_8b_prefill_b1_s2048:
+{'name': 'layer0_q_proj', 'iters': 7100, 'avg_latency_ms': 0.21380649620378522, 'avg_energy_J': 0.1268094366197183, 'avg_power_W': 593.0930010763549, 'out_elems': 8388608}
+{'name': 'layer0_k_proj', 'iters': 21200, 'avg_latency_ms': 0.07078479119066922, 'avg_energy_J': 0.04239080188679245, 'avg_power_W': 598.8572236038344, 'out_elems': 2097152}
+{'name': 'layer0_v_proj', 'iters': 21200, 'avg_latency_ms': 0.0709558738852447, 'avg_energy_J': 0.042590660377358494, 'avg_power_W': 600.2320408736311, 'out_elems': 2097152}
+{'name': 'layer0_attn_scores', 'iters': 3800, 'avg_latency_ms': 0.6143280796697963, 'avg_energy_J': 0.2768054385964912, 'avg_power_W': 450.58242941666475, 'out_elems': 134217728, 'scores_on_chip': False}
+{'name': 'layer0_attn_v', 'iters': 7700, 'avg_latency_ms': 0.1963919027749594, 'avg_energy_J': 0.10444298701298702, 'avg_power_W': 531.7968354840478, 'out_elems': 8388608}
+{'name': 'layer0_o_proj', 'iters': 7000, 'avg_latency_ms': 0.215419189453125, 'avg_energy_J': 0.137177, 'avg_power_W': 636.7741216378939, 'out_elems': 8388608}
+{'name': 'layer0_gate_proj', 'iters': 1900, 'avg_latency_ms': 0.8318062551398027, 'avg_energy_J': 0.4745415789473684, 'avg_power_W': 570.4842161597394, 'out_elems': 29360128}
+{'name': 'layer0_up_proj', 'iters': 1900, 'avg_latency_ms': 0.8331990774054276, 'avg_energy_J': 0.5055794736842105, 'avg_power_W': 606.7823339854216, 'out_elems': 29360128}
+{'name': 'layer0_down_proj', 'iters': 1900, 'avg_latency_ms': 0.8301897872121711, 'avg_energy_J': 0.50542, 'avg_power_W': 608.7898730483769, 'out_elems': 8388608}
+Critical Path Latency (ms): 2.9033345327192643
+Total Pipeline Energy (J): 2.2157573771249264
+Bottleneck Latency (ms): 0.8331990774054276
+Total Pipeline Energy with Idle (J): 2.3787433380920504
+P2P Transfer Energy (J): 0.8187281407999999  [@ 200 pJ/bit]
+Total Pipeline Energy with Idle + P2P (J): 3.19747147889205
+--- Inter-card transfer (step 4): NOT modelled (no link_model/curve; transfer latency assumed 0) ---
