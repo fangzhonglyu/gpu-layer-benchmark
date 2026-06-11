@@ -1,0 +1,22 @@
+Results for qwen3_235b_a22b_prefill_b16_s4096:
+{'name': 'layer0_q_proj', 'iters': 200, 'avg_latency_ms': 13.628125, 'avg_energy_J': 8.098725, 'avg_power_W': 594.2557245693871, 'out_elems': 536870912}
+{'name': 'layer0_k_proj', 'iters': 1600, 'avg_latency_ms': 0.9700178527832031, 'avg_energy_J': 0.60030375, 'avg_power_W': 618.8480321247342, 'out_elems': 33554432}
+{'name': 'layer0_v_proj', 'iters': 1600, 'avg_latency_ms': 0.9704045104980469, 'avg_energy_J': 0.56234125, 'avg_power_W': 579.4805284949663, 'out_elems': 33554432}
+{'name': 'layer0_attn_scores', 'iters': 100, 'avg_latency_ms': 84.85620361328125, 'avg_energy_J': 43.35797, 'avg_power_W': 510.95816397345686, 'out_elems': 17179869184, 'scores_on_chip': False}
+{'name': 'layer0_attn_v', 'iters': 100, 'avg_latency_ms': 23.6713525390625, 'avg_energy_J': 14.40251, 'avg_power_W': 608.4231442728674, 'out_elems': 536870912}
+{'name': 'layer0_o_proj', 'iters': 200, 'avg_latency_ms': 14.672425537109374, 'avg_energy_J': 8.69822, 'avg_power_W': 592.8164928093597, 'out_elems': 268435456}
+{'name': 'router', 'iters': 4100, 'avg_latency_ms': 0.37202883836699696, 'avg_energy_J': 0.21948463414634145, 'avg_power_W': 589.9536893492109, 'out_elems': 8388608}
+{'name': 'expert_gate_proj', 'iters': 7900, 'avg_latency_ms': 3.0578681269778483, 'avg_energy_J': 14.587414683544305, 'avg_power_W': 596.29334458937, 'out_elems': 6291456}
+{'name': 'expert_down_proj', 'iters': 10100, 'avg_latency_ms': 2.375318881497525, 'avg_energy_J': 11.426040396039603, 'avg_power_W': 601.2769899600028, 'out_elems': 16777216}
+Critical Path Latency (ms): 142.63332253629545
+Total Pipeline Energy (J): 101.95300971373025
+Bottleneck Latency (ms): 84.85620361328125
+Total Pipeline Energy with Idle (J): 129.8139536566282
+P2P Transfer Energy (J): 70.42151273642996  [@ 197 pJ/bit (size-dependent, eff.)]
+Total Pipeline Energy with Idle + P2P (J): 200.23546639305818
+--- Inter-card transfer (step 4), curve=nccl-gl1808 size-dependent (pj/bit 113-877, bw 4-48 GB/s) ---
+Max Single-Edge Transfer Latency (ms): 715.8278826666667
+Sum On-Path Transfer Latency (ms): 907.6149837822793
+Critical Path Latency w/ Transfer (ms): 1050.2483063185748
+Bottleneck Latency w/ Transfer (ms): 715.8278826666667
+Transfer-bound (slowest link > slowest compute stage): True

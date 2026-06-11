@@ -1,0 +1,22 @@
+Results for llama3.1_70b_prefill_b16_s2048:
+{'name': 'layer0_q_proj', 'iters': 200, 'avg_latency_ms': 14.903927001953125, 'avg_energy_J': 9.00041, 'avg_power_W': 603.8878265249577, 'out_elems': 268435456}
+{'name': 'layer0_k_proj', 'iters': 900, 'avg_latency_ms': 1.7115737575954861, 'avg_energy_J': 1.0667855555555554, 'avg_power_W': 623.2682584422384, 'out_elems': 33554432}
+{'name': 'layer0_v_proj', 'iters': 900, 'avg_latency_ms': 1.71169677734375, 'avg_energy_J': 1.0001900000000001, 'avg_power_W': 584.3144246987416, 'out_elems': 33554432}
+{'name': 'layer0_attn_scores', 'iters': 200, 'avg_latency_ms': 19.331444091796875, 'avg_energy_J': 9.484675, 'avg_power_W': 490.6345824430538, 'out_elems': 4294967296, 'scores_on_chip': False}
+{'name': 'layer0_attn_v', 'iters': 300, 'avg_latency_ms': 6.117056477864583, 'avg_energy_J': 3.368813333333333, 'avg_power_W': 550.7164118413629, 'out_elems': 268435456}
+{'name': 'layer0_o_proj', 'iters': 200, 'avg_latency_ms': 14.867425537109375, 'avg_energy_J': 8.99826, 'avg_power_W': 605.2265020715623, 'out_elems': 268435456}
+{'name': 'layer0_gate_proj', 'iters': 100, 'avg_latency_ms': 47.478173828125, 'avg_energy_J': 28.205189999999998, 'avg_power_W': 594.0608039405586, 'out_elems': 939524096}
+{'name': 'layer0_up_proj', 'iters': 100, 'avg_latency_ms': 47.4875927734375, 'avg_energy_J': 28.20541, 'avg_power_W': 593.9450948270913, 'out_elems': 939524096}
+{'name': 'layer0_down_proj', 'iters': 100, 'avg_latency_ms': 47.7321923828125, 'avg_energy_J': 28.799, 'avg_power_W': 603.3365834614762, 'out_elems': 268435456}
+Critical Path Latency (ms): 150.43963826497395
+Total Pipeline Energy (J): 118.12873388888889
+Bottleneck Latency (ms): 47.7321923828125
+Total Pipeline Energy with Idle (J): 128.39992308566625
+P2P Transfer Energy (J): 25.572885901161516  [@ 197 pJ/bit (size-dependent, eff.)]
+Total Pipeline Energy with Idle + P2P (J): 153.97280898682777
+--- Inter-card transfer (step 4), curve=nccl-gl1808 size-dependent (pj/bit 113-877, bw 4-48 GB/s) ---
+Max Single-Edge Transfer Latency (ms): 179.70574460251046
+Sum On-Path Transfer Latency (ms): 264.3917290186095
+Critical Path Latency w/ Transfer (ms): 414.83136728358346
+Bottleneck Latency w/ Transfer (ms): 179.70574460251046
+Transfer-bound (slowest link > slowest compute stage): True

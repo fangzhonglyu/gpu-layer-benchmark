@@ -1,0 +1,22 @@
+Results for qwen3_235b_a22b_prefill_b8_s2048:
+{'name': 'layer0_q_proj', 'iters': 500, 'avg_latency_ms': 3.4142978515625, 'avg_energy_J': 2.0413, 'avg_power_W': 597.8559221641254, 'out_elems': 134217728}
+{'name': 'layer0_k_proj', 'iters': 5900, 'avg_latency_ms': 0.2545087807865466, 'avg_energy_J': 0.15253796610169493, 'avg_power_W': 599.3294235990114, 'out_elems': 8388608}
+{'name': 'layer0_v_proj', 'iters': 5900, 'avg_latency_ms': 0.2544990151615466, 'avg_energy_J': 0.1525271186440678, 'avg_power_W': 599.3094165747038, 'out_elems': 8388608}
+{'name': 'layer0_attn_scores', 'iters': 300, 'avg_latency_ms': 9.897682861328125, 'avg_energy_J': 4.755819333333333, 'avg_power_W': 480.49825398175784, 'out_elems': 2147483648, 'scores_on_chip': False}
+{'name': 'layer0_attn_v', 'iters': 500, 'avg_latency_ms': 3.059064208984375, 'avg_energy_J': 1.665028, 'avg_power_W': 544.2798874318078, 'out_elems': 134217728}
+{'name': 'layer0_o_proj', 'iters': 500, 'avg_latency_ms': 3.7016025390625, 'avg_energy_J': 2.279306, 'avg_power_W': 615.7499909423666, 'out_elems': 67108864}
+{'name': 'router', 'iters': 14700, 'avg_latency_ms': 0.10263009207589285, 'avg_energy_J': 0.057115102040816323, 'avg_power_W': 556.4997046085284, 'out_elems': 2097152}
+{'name': 'expert_gate_proj', 'iters': 28000, 'avg_latency_ms': 0.8596800362723215, 'avg_energy_J': 3.816448, 'avg_power_W': 554.9111489060034, 'out_elems': 1572864}
+{'name': 'expert_down_proj', 'iters': 32600, 'avg_latency_ms': 0.7376034077837423, 'avg_energy_J': 3.5245074846625766, 'avg_power_W': 597.2773976779578, 'out_elems': 4194304}
+Critical Path Latency (ms): 21.772560997069455
+Total Pipeline Energy (J): 18.44458900478249
+Bottleneck Latency (ms): 9.897682861328125
+Total Pipeline Energy with Idle (J): 21.45047996793459
+P2P Transfer Energy (J): 10.731140937258255  [@ 195 pJ/bit (size-dependent, eff.)]
+Total Pipeline Energy with Idle + P2P (J): 32.181620905192844
+--- Inter-card transfer (step 4), curve=nccl-gl1808 size-dependent (pj/bit 113-877, bw 4-48 GB/s) ---
+Max Single-Edge Transfer Latency (ms): 90.23040537815126
+Sum On-Path Transfer Latency (ms): 138.19112502972968
+Critical Path Latency w/ Transfer (ms): 159.96368602679914
+Bottleneck Latency w/ Transfer (ms): 90.23040537815126
+Transfer-bound (slowest link > slowest compute stage): True

@@ -1,0 +1,17 @@
+Results for replknet31b_b4:
+{'name': 'layer1_stages_0_blocks_0_pw1_conv', 'iters': 214032, 'avg_latency_ms': 0.006939272821025302, 'avg_energy_J': 0.0036435766614338044, 'avg_power_W': 525.0575164654583, 'out_elems': 1605632}
+{'name': 'layer14_stages_1_blocks_0_large_kernel_lkb_origin_conv', 'iters': 5700, 'avg_latency_ms': 0.2676590983072917, 'avg_energy_J': 0.1087119298245614, 'avg_power_W': 406.145058643318, 'out_elems': 802816}
+{'name': 'layer15_stages_1_blocks_0_large_kernel_small_conv_conv', 'iters': 224256, 'avg_latency_ms': 0.006629008136383474, 'avg_energy_J': 0.0024086312071917807, 'avg_power_W': 363.3343890662978, 'out_elems': 802816}
+{'name': 'layer16_stages_1_blocks_0_pw2_conv', 'iters': 220095, 'avg_latency_ms': 0.006818994243785354, 'avg_energy_J': 0.0029982825598037213, 'avg_power_W': 439.6808976317549, 'out_elems': 802816}
+Critical Path Latency (ms): 0.2880463735084858
+Total Pipeline Energy (J): 0.1177624202529907
+Bottleneck Latency (ms): 0.2676590983072917
+Total Pipeline Energy with Idle (J): 0.15297897114042136
+P2P Transfer Energy (J): 0.006893634738572999  [@ 134 pJ/bit (size-dependent, eff.)]
+Total Pipeline Energy with Idle + P2P (J): 0.15987260587899435
+--- Inter-card transfer (step 4), curve=nccl-gl1808 size-dependent (pj/bit 113-877, bw 4-48 GB/s) ---
+Max Single-Edge Transfer Latency (ms): 0.07832686383085545
+Sum On-Path Transfer Latency (ms): 0.1700571035608012
+Critical Path Latency w/ Transfer (ms): 0.458103477069287
+Bottleneck Latency w/ Transfer (ms): 0.2676590983072917
+Transfer-bound (slowest link > slowest compute stage): False

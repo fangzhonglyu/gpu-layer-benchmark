@@ -1,0 +1,21 @@
+Results for vit_l16_s197_b8:
+{'name': 'layer0_q_proj', 'iters': 83325, 'avg_latency_ms': 0.018018273995368286, 'avg_energy_J': 0.008857389738973898, 'avg_power_W': 491.5677660696822, 'out_elems': 1613824}
+{'name': 'layer0_k_proj', 'iters': 83325, 'avg_latency_ms': 0.018017182577632764, 'avg_energy_J': 0.0088600300030003, 'avg_power_W': 491.74072981810053, 'out_elems': 1613824}
+{'name': 'layer0_v_proj', 'iters': 83325, 'avg_latency_ms': 0.018019114899771226, 'avg_energy_J': 0.009451401140114012, 'avg_power_W': 524.5105120671327, 'out_elems': 1613824}
+{'name': 'layer0_attn_scores', 'iters': 98604, 'avg_latency_ms': 0.02964940169254987, 'avg_energy_J': 0.015367708138173748, 'avg_power_W': 518.314274855511, 'out_elems': 4967552, 'scores_on_chip': False}
+{'name': 'layer0_attn_v', 'iters': 94900, 'avg_latency_ms': 0.01582055947049526, 'avg_energy_J': 0.006423066385669125, 'avg_power_W': 405.98587157297635, 'out_elems': 1613824}
+{'name': 'layer0_o_proj', 'iters': 83325, 'avg_latency_ms': 0.018000300030003, 'avg_energy_J': 0.00882096609660966, 'avg_power_W': 490.03031014615567, 'out_elems': 1613824}
+{'name': 'layer0_gate_proj', 'iters': 21900, 'avg_latency_ms': 0.06853630449129566, 'avg_energy_J': 0.041166027397260274, 'avg_power_W': 600.6328615459906, 'out_elems': 6455296}
+{'name': 'layer0_down_proj', 'iters': 27200, 'avg_latency_ms': 0.05523338317871094, 'avg_energy_J': 0.03193691176470588, 'avg_power_W': 578.2051306615937, 'out_elems': 1613824}
+Critical Path Latency (ms): 0.20525906376282596
+Total Pipeline Energy (J): 0.1308835006645069
+Bottleneck Latency (ms): 0.06853630449129566
+Total Pipeline Energy with Idle (J): 0.14469831686626114
+P2P Transfer Energy (J): 0.046746530499820776  [@ 120 pJ/bit (size-dependent, eff.)]
+Total Pipeline Energy with Idle + P2P (J): 0.19144484736608192
+--- Inter-card transfer (step 4), curve=nccl-gl1808 size-dependent (pj/bit 113-877, bw 4-48 GB/s) ---
+Max Single-Edge Transfer Latency (ms): 0.27827380694563575
+Sum On-Path Transfer Latency (ms): 0.8100015756624085
+Critical Path Latency w/ Transfer (ms): 1.0152606394252344
+Bottleneck Latency w/ Transfer (ms): 0.27827380694563575
+Transfer-bound (slowest link > slowest compute stage): True

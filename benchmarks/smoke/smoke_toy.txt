@@ -1,0 +1,15 @@
+Results for smoke_toy:
+{'name': 'opA', 'iters': 3000, 'avg_latency_ms': 0.4752794189453125, 'avg_energy_J': 0.28384933333333334, 'avg_power_W': 597.2151919390727, 'out_elems': 16777216}
+{'name': 'opB', 'iters': 3000, 'avg_latency_ms': 0.4569278564453125, 'avg_energy_J': 0.280134, 'avg_power_W': 613.0531245702966, 'out_elems': 16777216}
+Critical Path Latency (ms): 0.932207275390625
+Total Pipeline Energy (J): 0.5639833333333333
+Bottleneck Latency (ms): 0.4752794189453125
+Total Pipeline Energy with Idle (J): 0.5648091536458333
+P2P Transfer Energy (J): 0.0536870912  [@ 200 pJ/bit]
+Total Pipeline Energy with Idle + P2P (J): 0.6184962448458333
+--- Inter-card transfer (step 4), link=pcie 54.2 GB/s 3.5 us ---
+Max Single-Edge Transfer Latency (ms): 0.6229480554140552
+Sum On-Path Transfer Latency (ms): 0.6229480554140552
+Critical Path Latency w/ Transfer (ms): 1.5551553308046802
+Bottleneck Latency w/ Transfer (ms): 0.6229480554140552
+Transfer-bound (slowest link > slowest compute stage): True
