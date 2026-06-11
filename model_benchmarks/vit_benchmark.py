@@ -2,7 +2,7 @@ from typing import List, Tuple
 from itertools import product
 from torch import float16
 
-from kernels import test_matmul_iter, test_fused_qk_softmax_iter, link_model_from_env, transfer_curve_from_env
+from kernels import test_matmul_iter, test_fused_qk_softmax_iter, link_model_from_env, transfer_curve_from_env, device_from_env
 from pipeline_benchmark import pipeline_benchmark
 
 # Vision Transformer encoder-block baselines. Standard MHA (no GQA), GELU MLP
@@ -74,4 +74,5 @@ def vit_pipelines() -> List[Tuple]:
 if __name__ == "__main__":
     LINK = link_model_from_env()  # PCIE_LINK_JSON=<path> to model step-④ transfer
     CURVE = transfer_curve_from_env(default_measured=True)  # size-dependent bw+pj/bit; PCIE_CURVE_JSON=<path> overrides
-    pipeline_benchmark(output_dir="benchmarks/vit", pipelines=vit_pipelines(), device_index=0, link_model=LINK, transfer_curve=CURVE)
+    DEVICE = device_from_env()  # BENCH_DEVICE=k to pin this run to a card (multi-GPU launch)
+    pipeline_benchmark(output_dir="benchmarks/vit", pipelines=vit_pipelines(), device_index=DEVICE, link_model=LINK, transfer_curve=CURVE)

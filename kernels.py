@@ -9,7 +9,8 @@ from typing import List, Tuple, Callable, Optional, Dict
 
 from pynvml import (nvmlDeviceGetTotalEnergyConsumption, nvmlInit,
                     nvmlDeviceGetHandleByIndex, nvmlDeviceGetPowerUsage,
-                    nvmlDeviceGetClockInfo, NVML_CLOCK_SM)
+                    nvmlDeviceGetClockInfo, NVML_CLOCK_SM,
+                    nvmlDeviceGetCount, nvmlDeviceGetUUID)
 import torch.nn.functional as F
 
 
@@ -349,18 +350,51 @@ def transfer_curve_from_env(var: str = "PCIE_CURVE_JSON",
     return None
 
 
+def device_from_env(var: str = "BENCH_DEVICE", default: int = 0) -> int:
+    """CUDA device index for this run, from env var `var` (default 0). Set BENCH_DEVICE=k
+    per process to pin one benchmark per card when launching across multiple GPUs; set_device
+    binds the NVML energy handle to the same physical card by UUID."""
+    return int(os.environ.get(var, default))
+
+
+def _nvml_handle_for_cuda_device(cuda_index: int):
+    """Return (handle, nvml_index) for the PHYSICAL GPU that torch calls cuda:cuda_index.
+
+    NVML enumerates physical GPUs and IGNORES CUDA_VISIBLE_DEVICES / CUDA_DEVICE_ORDER, so
+    nvmlDeviceGetHandleByIndex(i) is NOT necessarily the card torch runs on as cuda:i. Using
+    the naive index would read energy from the wrong board whenever the run is pinned with
+    CUDA_VISIBLE_DEVICES (e.g. launching one process per card across 4 GPUs) -- all of them
+    would report GPU 0's energy. Match by UUID so energy is always read from the card that
+    compute actually executes on."""
+    want = str(torch.cuda.get_device_properties(cuda_index).uuid)   # '8c266ba3-...'
+    for i in range(nvmlDeviceGetCount()):
+        h = nvmlDeviceGetHandleByIndex(i)
+        u = nvmlDeviceGetUUID(h)
+        if isinstance(u, bytes):
+            u = u.decode()
+        if want in u:                                              # NVML form is 'GPU-<uuid>'
+            return h, i
+    raise RuntimeError(f"no NVML GPU matches CUDA cuda:{cuda_index} (uuid {want})")
+
+
 def set_device(device_index: int):
     """
-    Initialize NVML and set the global handle for energy consumption measurement.
-    
+    Select the CUDA device and bind the global NVML handle to the SAME physical GPU
+    (resolved by UUID, not index -- see _nvml_handle_for_cuda_device) for energy reads.
+
     Args:
-        device_index (int): Index of the GPU device.
+        device_index (int): CUDA device index (cuda:device_index). Override per process via
+            the BENCH_DEVICE env var to run one benchmark per card across multiple GPUs.
     """
     global handle
     nvmlInit()
-    handle = nvmlDeviceGetHandleByIndex(device_index)
     torch.cuda.set_device(device_index)
-    print(f"Using CUDA device: {torch.cuda.get_device_name(device_index)}")
+    handle, nvml_index = _nvml_handle_for_cuda_device(device_index)
+    name = torch.cuda.get_device_name(device_index)
+    if nvml_index != device_index:
+        print(f"[device] cuda:{device_index} -> NVML physical GPU {nvml_index} "
+              f"(remapped by CUDA_VISIBLE_DEVICES/DEVICE_ORDER; energy read from the correct card)")
+    print(f"Using CUDA device cuda:{device_index} ({name}); NVML energy from physical GPU {nvml_index}")
 
 def profile_device_idle_power():
     global handle

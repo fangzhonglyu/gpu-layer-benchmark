@@ -3,7 +3,7 @@ from itertools import product
 from torch import float16
 
 from kernels import (test_matmul_iter, test_fused_qk_softmax_iter,
-                     link_model_from_env, transfer_curve_from_env)
+                     link_model_from_env, transfer_curve_from_env, device_from_env)
 from pipeline_benchmark import pipeline_benchmark
 
 # Llama 3.1 8B architecture
@@ -94,5 +94,6 @@ if __name__ == "__main__":
     # to fold real PCIe transfer into bottleneck + critical path; unset = energy-only.
     LINK = link_model_from_env()
     CURVE = transfer_curve_from_env(default_measured=True)  # size-dependent bw+pj/bit; PCIE_CURVE_JSON=<path> overrides
-    pipeline_benchmark(output_dir="benchmarks/llama3.1_8b_prefill", pipelines=prefill_pipelines(), device_index=0, link_model=LINK, transfer_curve=CURVE)
-    pipeline_benchmark(output_dir="benchmarks/llama3.1_8b_decode",  pipelines=decode_pipelines(),  device_index=0, link_model=LINK, transfer_curve=CURVE)
+    DEVICE = device_from_env()  # BENCH_DEVICE=k to pin this run to a card (multi-GPU launch)
+    pipeline_benchmark(output_dir="benchmarks/llama3.1_8b_prefill", pipelines=prefill_pipelines(), device_index=DEVICE, link_model=LINK, transfer_curve=CURVE)
+    pipeline_benchmark(output_dir="benchmarks/llama3.1_8b_decode",  pipelines=decode_pipelines(),  device_index=DEVICE, link_model=LINK, transfer_curve=CURVE)
