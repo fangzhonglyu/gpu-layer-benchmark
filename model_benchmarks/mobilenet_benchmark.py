@@ -1,7 +1,7 @@
 from typing import List, Tuple, Callable
 from torch import float16
 
-from kernels import test_matmul_iter, test_conv_iter
+from kernels import test_matmul_iter, test_conv_iter, device_from_env
 from pipeline_benchmark import pipeline_benchmark
 
 # Canonical (unique-in-DB) operators for mobilenet_v3_small — match workloads/
@@ -49,4 +49,4 @@ def mobilenet_v3_small_pipeline(N: int) -> Tuple[str, List[Tuple[str, Callable]]
 B = [1, 4, 8, 16]
 pipelines = [mobilenet_v3_small_pipeline(n) for n in B]
 
-pipeline_benchmark(output_dir="benchmarks/mobilenet_v3_small", pipelines=pipelines, device_index=0)
+pipeline_benchmark(output_dir="benchmarks/mobilenet_v3_small", pipelines=pipelines, device_index=device_from_env())
