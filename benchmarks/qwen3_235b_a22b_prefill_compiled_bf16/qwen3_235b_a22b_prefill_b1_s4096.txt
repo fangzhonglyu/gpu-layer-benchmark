@@ -1,0 +1,22 @@
+Results for qwen3_235b_a22b_prefill_b1_s4096:
+{'name': 'layer0_q_proj', 'iters': 2100, 'avg_latency_ms': 0.7306366257440476, 'avg_energy_J': 0.42859619047619046, 'avg_power_W': 586.5888622916691, 'out_elems': 33554432}
+{'name': 'layer0_k_proj', 'iters': 24000, 'avg_latency_ms': 0.06272997538248698, 'avg_energy_J': 0.037567416666666666, 'avg_power_W': 598.8625041124969, 'out_elems': 2097152}
+{'name': 'layer0_v_proj', 'iters': 24100, 'avg_latency_ms': 0.06277991583733143, 'avg_energy_J': 0.03737348547717843, 'avg_power_W': 595.2916490690139, 'out_elems': 2097152}
+{'name': 'layer0_attn_scores', 'iters': 600, 'avg_latency_ms': 4.450517333984375, 'avg_energy_J': 2.2585556666666666, 'avg_power_W': 507.4816020646008, 'out_elems': 1073741824, 'scores_on_chip': False}
+{'name': 'layer0_attn_v', 'iters': 1100, 'avg_latency_ms': 1.4735280539772728, 'avg_energy_J': 0.7542327272727273, 'avg_power_W': 511.843214279325, 'out_elems': 33554432}
+{'name': 'layer0_o_proj', 'iters': 2100, 'avg_latency_ms': 0.7492320614769346, 'avg_energy_J': 0.45802857142857145, 'avg_power_W': 611.3163371377054, 'out_elems': 16777216}
+{'name': 'router', 'iters': 48100, 'avg_latency_ms': 0.031176620768905924, 'avg_energy_J': 0.016250395010395012, 'avg_power_W': 521.2240637151006, 'out_elems': 524288}
+{'name': 'expert_gate_proj', 'iters': 77200, 'avg_latency_ms': 0.3108603869818653, 'avg_energy_J': 1.244521450777202, 'avg_power_W': 500.4213945583826, 'out_elems': 393216}
+{'name': 'expert_down_proj', 'iters': 79200, 'avg_latency_ms': 0.3031842842487374, 'avg_energy_J': 1.1567919191919191, 'avg_power_W': 476.92091210473137, 'out_elems': 1048576}
+Critical Path Latency (ms): 8.049135367182139
+Total Pipeline Energy (J): 6.391917822967517
+Bottleneck Latency (ms): 4.450517333984375
+Total Pipeline Energy with Idle (J): 7.8265183066031
+P2P Transfer Energy (J): 4.251471846785232  [@ 190 pJ/bit (size-dependent, eff.)]
+Total Pipeline Energy with Idle + P2P (J): 12.077990153388331
+--- Inter-card transfer (step 4), curve=nccl-gl1808 size-dependent (pj/bit 113-877, bw 4-48 GB/s) ---
+Max Single-Edge Transfer Latency (ms): 45.11520268907563
+Sum On-Path Transfer Latency (ms): 57.0875514485693
+Critical Path Latency w/ Transfer (ms): 65.13668681575143
+Bottleneck Latency w/ Transfer (ms): 45.11520268907563
+Transfer-bound (slowest link > slowest compute stage): True

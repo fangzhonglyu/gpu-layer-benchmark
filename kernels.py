@@ -3,6 +3,7 @@ import time
 import os
 import json
 import math
+import gc
 import shutil
 from dataclasses import dataclass, asdict
 from typing import List, Tuple, Callable, Optional, Dict
@@ -46,6 +47,24 @@ def _maybe_compile(fn: Callable) -> Callable:
     if not COMPILE_BACKEND:
         return fn
     return torch.compile(fn, mode=COMPILE_MODE, dynamic=False)
+
+
+# --- Optional activation dtype override -------------------------------------
+# Model scripts hardcode datatype=torch.float16. Set BENCH_DTYPE=bf16 to run the
+# whole sweep in bfloat16 instead, without editing every call site. bf16 is also
+# 2 bytes, so DTYPE_BYTES and the PCIe transfer curve stay valid.
+_DTYPE_ALIASES = {
+    "bf16": torch.bfloat16, "bfloat16": torch.bfloat16,
+    "fp16": torch.float16, "float16": torch.float16, "half": torch.float16,
+    "fp32": torch.float32, "float32": torch.float32,
+}
+BENCH_DTYPE = _DTYPE_ALIASES.get(os.environ.get("BENCH_DTYPE", "").lower())
+if BENCH_DTYPE is not None:
+    print(f"[dtype] BENCH_DTYPE override -> {BENCH_DTYPE}")
+
+def _dtype(datatype: torch.dtype) -> torch.dtype:
+    """Honor a BENCH_DTYPE env override; else use the caller's datatype."""
+    return BENCH_DTYPE if BENCH_DTYPE is not None else datatype
 
 
 # --- Inter-card transfer (step ④) latency model -----------------------------
@@ -625,6 +644,7 @@ def test_kernel_iter(name: str, setup_func: Callable, capture_func: Callable, it
     }
 
 def test_matmul_iter(name: str, M:int, K:int, N:int, datatype:torch.dtype=torch.float16, iters:int=100):
+    datatype = _dtype(datatype)
     mm = _maybe_compile(lambda a, b: torch.matmul(a, b))   # eager: identity wrapper
     def setup():
         input1 = torch.randn(M, K, dtype=datatype, device='cuda')
@@ -646,6 +666,7 @@ def test_matmul_iter(name: str, M:int, K:int, N:int, datatype:torch.dtype=torch.
 
 def test_softmax_iter(name: str,N:int, M:int, datatype:torch.dtype=torch.float16, iters:int=100,
                       ring_override: Optional[int] = None):
+    datatype = _dtype(datatype)
     sm = _maybe_compile(lambda x: torch.softmax(x, dim=-1))
     def setup():
         input_tensor = torch.randn(N, M, dtype=datatype, device='cuda')
@@ -727,6 +748,7 @@ def test_conv_iter(name: str, N, C, P, Q, M, G, R, S, HS:int, WS:int, datatype:t
     - HS: height stride
     - WS: width stride
     """
+    datatype = _dtype(datatype)
     conv = _maybe_compile(lambda x, w: torch.nn.functional.conv2d(x, w, stride=(HS, WS), groups=G))
     def setup():
         H_in = (P-1) * HS + R # Input height
@@ -752,6 +774,12 @@ def test_conv_iter(name: str, N, C, P, Q, M, G, R, S, HS:int, WS:int, datatype:t
 
 def run_phase(res_list: List[dict], func: Callable, *args, **kwargs):
     res_list.append(func(*args, **kwargs))
+    # Each op captures a CUDA graph whose private memory pool (plus capture-closure
+    # cycles) is not reclaimed by refcounting alone; without this, per-op buffers
+    # accumulate across a pipeline and large prefill shapes (e.g. b16/s4096 attn) OOM.
+    # Forcing a collect + cache release here caps peak memory at one op at a time.
+    gc.collect()
+    torch.cuda.empty_cache()
     print(GREEN_DOT, end='', flush=True)
 
 def combine_dag(results: List[dict], levels: List = None, edges: List[Tuple] = None,

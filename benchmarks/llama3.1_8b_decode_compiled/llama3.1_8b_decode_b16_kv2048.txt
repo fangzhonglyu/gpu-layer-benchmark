@@ -1,0 +1,22 @@
+Results for llama3.1_8b_decode_b16_kv2048:
+{'name': 'layer0_q_proj', 'iters': 63900, 'avg_latency_ms': 0.023483531396713615, 'avg_energy_J': 0.008101830985915492, 'avg_power_W': 344.9950970495566, 'out_elems': 65536}
+{'name': 'layer0_k_proj', 'iters': 82900, 'avg_latency_ms': 0.018110615140134952, 'avg_energy_J': 0.003838721351025332, 'avg_power_W': 211.95548828480835, 'out_elems': 16384}
+{'name': 'layer0_v_proj', 'iters': 82900, 'avg_latency_ms': 0.01811073883019828, 'avg_energy_J': 0.003592798552472859, 'avg_power_W': 198.37638094003904, 'out_elems': 16384}
+{'name': 'layer0_attn_scores', 'iters': 396880, 'avg_latency_ms': 0.007199466634759705, 'avg_energy_J': 0.002688089033715316, 'avg_power_W': 373.3733580675224, 'out_elems': 1048576, 'scores_on_chip': True}
+{'name': 'layer0_attn_v', 'iters': 262195, 'avg_latency_ms': 0.005723876231490398, 'avg_energy_J': 0.0016096607486794181, 'avg_power_W': 281.2103219218935, 'out_elems': 65536}
+{'name': 'layer0_o_proj', 'iters': 63600, 'avg_latency_ms': 0.023618342561541862, 'avg_energy_J': 0.008118160377358491, 'avg_power_W': 343.71517869257076, 'out_elems': 65536}
+{'name': 'layer0_gate_proj', 'iters': 19100, 'avg_latency_ms': 0.07861110187949935, 'avg_energy_J': 0.026058324607329843, 'avg_power_W': 331.47695895222046, 'out_elems': 229376}
+{'name': 'layer0_up_proj', 'iters': 19100, 'avg_latency_ms': 0.0786309143385962, 'avg_energy_J': 0.02608287958115183, 'avg_power_W': 331.7062776076067, 'out_elems': 229376}
+{'name': 'layer0_down_proj', 'iters': 18900, 'avg_latency_ms': 0.07953123708250662, 'avg_energy_J': 0.027824867724867725, 'avg_power_W': 349.854027170294, 'out_elems': 65536}
+Critical Path Latency (ms): 0.2181873682456084
+Total Pipeline Energy (J): 0.1079153329625163
+Bottleneck Latency (ms): 0.07953123708250662
+Total Pipeline Energy with Idle (J): 0.12513959189663665
+P2P Transfer Energy (J): 0.007638783828416788  [@ 239 pJ/bit (size-dependent, eff.)]
+Total Pipeline Energy with Idle + P2P (J): 0.13277837572505344
+--- Inter-card transfer (step 4), curve=nccl-gl1808 size-dependent (pj/bit 113-877, bw 4-48 GB/s) ---
+Max Single-Edge Transfer Latency (ms): 0.053227208121827414
+Sum On-Path Transfer Latency (ms): 0.13628123099993267
+Critical Path Latency w/ Transfer (ms): 0.3544685992455411
+Bottleneck Latency w/ Transfer (ms): 0.07953123708250662
+Transfer-bound (slowest link > slowest compute stage): False

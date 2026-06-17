@@ -1,0 +1,5 @@
+Grafted prefill points (origin: eager fp16, Jun-10 sweep; compiled bf16 OOMs at this shape
+because Inductor autotune holds ~2-3x the 34 GB attn QK buffer on a 95 GB card):
+  llama3.1_70b_prefill_b16_s4096
+  qwen3_235b_a22b_prefill_b16_s4096
+All other rows are compiled (Triton/cuBLAS autotune) bf16.

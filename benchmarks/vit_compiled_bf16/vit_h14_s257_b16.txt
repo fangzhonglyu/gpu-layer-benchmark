@@ -1,0 +1,21 @@
+Results for vit_h14_s257_b16:
+{'name': 'layer0_q_proj', 'iters': 35100, 'avg_latency_ms': 0.04346636562945157, 'avg_energy_J': 0.02745777777777778, 'avg_power_W': 631.6838394375824, 'out_elems': 5263360}
+{'name': 'layer0_k_proj', 'iters': 35100, 'avg_latency_ms': 0.04348888777599715, 'avg_energy_J': 0.025716467236467238, 'avg_power_W': 591.3125035275316, 'out_elems': 5263360}
+{'name': 'layer0_v_proj', 'iters': 35100, 'avg_latency_ms': 0.04353725683315527, 'avg_energy_J': 0.02572176638176638, 'avg_power_W': 590.7828852770892, 'out_elems': 5263360}
+{'name': 'layer0_attn_scores', 'iters': 42800, 'avg_latency_ms': 0.06029535359258986, 'avg_energy_J': 0.03395119425453177, 'avg_power_W': 563.0814354939662, 'out_elems': 16908544, 'scores_on_chip': False}
+{'name': 'layer0_attn_v', 'iters': 38900, 'avg_latency_ms': 0.03857779926996305, 'avg_energy_J': 0.019074832904884317, 'avg_power_W': 494.436620648279, 'out_elems': 5263360}
+{'name': 'layer0_o_proj', 'iters': 34700, 'avg_latency_ms': 0.043531747427728744, 'avg_energy_J': 0.0259650144092219, 'avg_power_W': 596.4436020361994, 'out_elems': 5263360}
+{'name': 'layer0_gate_proj', 'iters': 9500, 'avg_latency_ms': 0.15874965306332237, 'avg_energy_J': 0.08864852631578947, 'avg_power_W': 558.399909633046, 'out_elems': 21053440}
+{'name': 'layer0_down_proj', 'iters': 9200, 'avg_latency_ms': 0.16433195694633151, 'avg_energy_J': 0.0978575, 'avg_power_W': 595.4701355415692, 'out_elems': 5263360}
+Critical Path Latency (ms): 0.5090237671330908
+Total Pipeline Energy (J): 0.34439307928043883
+Bottleneck Latency (ms): 0.16433195694633151
+Total Pipeline Energy with Idle (J): 0.3767335278568839
+P2P Transfer Energy (J): 0.15334709944602676  [@ 120 pJ/bit (size-dependent, eff.)]
+Total Pipeline Energy with Idle + P2P (J): 0.5300806273029106
+--- Inter-card transfer (step 4), curve=nccl-gl1808 size-dependent (pj/bit 113-877, bw 4-48 GB/s) ---
+Max Single-Edge Transfer Latency (ms): 0.8846627810163439
+Sum On-Path Transfer Latency (ms): 2.514882004207954
+Critical Path Latency w/ Transfer (ms): 3.023905771341045
+Bottleneck Latency w/ Transfer (ms): 0.8846627810163439
+Transfer-bound (slowest link > slowest compute stage): True

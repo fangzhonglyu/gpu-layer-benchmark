@@ -98,6 +98,13 @@ def pipeline_benchmark(output_dir:str, pipelines:List[Tuple], device_index:int =
     else:
         print("[link] step-4 transfer NOT modelled (latency assumed 0); pass link_model/transfer_curve=...")
 
+    # Optional run-tag: BENCH_OUT_SUFFIX=_compiled redirects output to a sibling dir
+    # (e.g. benchmarks/llama3.1_8b_prefill_compiled) so an optimized-kernel sweep does
+    # not clobber the eager baseline written to the hardcoded path.
+    suffix = os.environ.get("BENCH_OUT_SUFFIX", "")
+    if suffix:
+        output_dir = output_dir + suffix
+
     os.makedirs(output_dir, exist_ok=True)
     all_results = []
 

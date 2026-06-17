@@ -1,17 +1,17 @@
 Results for llama3.1_8b_prefill_b1_s2048:
-{'name': 'layer0_q_proj', 'iters': 7100, 'avg_latency_ms': 0.21380649620378522, 'avg_energy_J': 0.1268094366197183, 'avg_power_W': 593.0930010763549, 'out_elems': 8388608}
-{'name': 'layer0_k_proj', 'iters': 21200, 'avg_latency_ms': 0.07078479119066922, 'avg_energy_J': 0.04239080188679245, 'avg_power_W': 598.8572236038344, 'out_elems': 2097152}
-{'name': 'layer0_v_proj', 'iters': 21200, 'avg_latency_ms': 0.0709558738852447, 'avg_energy_J': 0.042590660377358494, 'avg_power_W': 600.2320408736311, 'out_elems': 2097152}
-{'name': 'layer0_attn_scores', 'iters': 3800, 'avg_latency_ms': 0.6143280796697963, 'avg_energy_J': 0.2768054385964912, 'avg_power_W': 450.58242941666475, 'out_elems': 134217728, 'scores_on_chip': False}
-{'name': 'layer0_attn_v', 'iters': 7700, 'avg_latency_ms': 0.1963919027749594, 'avg_energy_J': 0.10444298701298702, 'avg_power_W': 531.7968354840478, 'out_elems': 8388608}
-{'name': 'layer0_o_proj', 'iters': 7000, 'avg_latency_ms': 0.215419189453125, 'avg_energy_J': 0.137177, 'avg_power_W': 636.7741216378939, 'out_elems': 8388608}
-{'name': 'layer0_gate_proj', 'iters': 1900, 'avg_latency_ms': 0.8318062551398027, 'avg_energy_J': 0.4745415789473684, 'avg_power_W': 570.4842161597394, 'out_elems': 29360128}
-{'name': 'layer0_up_proj', 'iters': 1900, 'avg_latency_ms': 0.8331990774054276, 'avg_energy_J': 0.5055794736842105, 'avg_power_W': 606.7823339854216, 'out_elems': 29360128}
-{'name': 'layer0_down_proj', 'iters': 1900, 'avg_latency_ms': 0.8301897872121711, 'avg_energy_J': 0.50542, 'avg_power_W': 608.7898730483769, 'out_elems': 8388608}
-Critical Path Latency (ms): 2.9033345327192643
-Total Pipeline Energy (J): 2.2157573771249264
-Bottleneck Latency (ms): 0.8331990774054276
-Total Pipeline Energy with Idle (J): 2.3787433380920504
+{'name': 'layer0_q_proj', 'iters': 7200, 'avg_latency_ms': 0.21215318467881944, 'avg_energy_J': 0.12512361111111112, 'avg_power_W': 589.7702414163002, 'out_elems': 8388608}
+{'name': 'layer0_k_proj', 'iters': 21400, 'avg_latency_ms': 0.07013702107367115, 'avg_energy_J': 0.04196761682242991, 'avg_power_W': 598.3542231856129, 'out_elems': 2097152}
+{'name': 'layer0_v_proj', 'iters': 21400, 'avg_latency_ms': 0.07018086371020736, 'avg_energy_J': 0.04206714953271028, 'avg_power_W': 599.4011078494351, 'out_elems': 2097152}
+{'name': 'layer0_attn_scores', 'iters': 3800, 'avg_latency_ms': 0.6134051272743627, 'avg_energy_J': 0.29242761695906433, 'avg_power_W': 476.72835448645975, 'out_elems': 134217728, 'scores_on_chip': False}
+{'name': 'layer0_attn_v', 'iters': 7700, 'avg_latency_ms': 0.1952214545708198, 'avg_energy_J': 0.1030461038961039, 'avg_power_W': 527.8328801280337, 'out_elems': 8388608}
+{'name': 'layer0_o_proj', 'iters': 7100, 'avg_latency_ms': 0.21374798841879403, 'avg_energy_J': 0.12674605633802818, 'avg_power_W': 592.9562728718481, 'out_elems': 8388608}
+{'name': 'layer0_gate_proj', 'iters': 1900, 'avg_latency_ms': 0.8259947445518092, 'avg_energy_J': 0.5057942105263158, 'avg_power_W': 612.335164437273, 'out_elems': 29360128}
+{'name': 'layer0_up_proj', 'iters': 1900, 'avg_latency_ms': 0.8271768991570724, 'avg_energy_J': 0.4736047368421053, 'avg_power_W': 572.5451399970672, 'out_elems': 29360128}
+{'name': 'layer0_down_proj', 'iters': 1900, 'avg_latency_ms': 0.8247397332442434, 'avg_energy_J': 0.5053768421052631, 'avg_power_W': 612.7590004264946, 'out_elems': 8388608}
+Critical Path Latency (ms): 2.8864443873441115
+Total Pipeline Energy (J): 2.216153944133132
+Bottleneck Latency (ms): 0.8271768991570724
+Total Pipeline Energy with Idle (J): 2.377786522541155
 P2P Transfer Energy (J): 0.8187281407999999  [@ 200 pJ/bit]
-Total Pipeline Energy with Idle + P2P (J): 3.19747147889205
+Total Pipeline Energy with Idle + P2P (J): 3.196514663341155
 --- Inter-card transfer (step 4): NOT modelled (no link_model/curve; transfer latency assumed 0) ---
